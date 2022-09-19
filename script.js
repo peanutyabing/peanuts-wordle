@@ -1,15 +1,24 @@
 var todaysAnswer = getTodaysWord();
-var pastOutput = "";
+var pastOutput = ""; //// For the base render will delete later
+const guessedWords = []; //// Write a function later to add past guesses
+var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 
-var main = function (input) {
-  var resultMap = getResultMap(input, todaysAnswer);
-  var myOutput = "";
-  for (i = 0; i < input.length; i += 1) {
-    myOutput += `${input[i]} is ${resultMap[i.toString()]}<br>`;
+function submitAnswer(input) {
+  if (validate(input)) {
+    var resultMap = getResultMap(input, todaysAnswer);
+    //// Display output for base render
+    var myOutput = "";
+    for (i = 0; i < input.length; i += 1) {
+      myOutput += `${input[i]} is ${resultMap[i.toString()]}<br>`;
+    }
+    pastOutput += myOutput + "<br>";
+    console.log(myOutput);
+    guessedWords.push(input);
+  } else {
+    //// Display some kind of message e.g. "your guess is not a valid word"
   }
-  pastOutput += myOutput + "<br>";
-  return myOutput;
-};
+  // return myOutput;
+}
 
 // Generate today's word
 function getTodaysWord() {
@@ -21,11 +30,41 @@ function getTodaysWord() {
   return todaysWord;
 }
 
+function displayGuessedWord(letter) {
+  const cells = document.querySelectorAll(".cell");
+  var currentCell = cells[cellCounter];
+  currentCell.innerHTML = letter;
+  cellCounter += 1;
+}
+
+function removeLastLetter() {
+  const cells = document.querySelectorAll(".cell");
+  if (cellCounter < 1) {
+  } else {
+    var lastCell = cells[cellCounter - 1];
+    lastCell.innerHTML = "";
+    cellCounter -= 1;
+  }
+}
+
+// Convert letters in each row in the grid into a string
+function getWord() {
+  var word = "";
+  var currentRowIndex = guessedWords.length;
+  var currentRowId = "row-" + (currentRowIndex + 1).toString();
+  var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
+  for (i = 0; i < currentRowCells.length; i += 1) {
+    word += currentRowCells[i].innerHTML;
+  }
+  console.log(word);
+  return word;
+}
+
 // Check if player's guess is in the word bank
 function validate(guess) {
   let firstLetter = guess[0];
-  console.log(`first letter ${firstLetter}`);
-  console.log(`${indexedWords[firstLetter]}`);
+  // console.log(`first letter ${firstLetter}`);
+  // console.log(`${indexedWords[firstLetter]}`);
   if (indexedWords[firstLetter].includes(guess)) {
     console.log(`${guess} is a word.`);
     return true;

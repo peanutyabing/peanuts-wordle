@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Wordle</title>
+    <title>Peanut's Wordle</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       * {
         box-sizing: border-box;
@@ -15,70 +24,177 @@
 
       #header {
         text-align: center;
+        font-family: "Oxanium", cursive;
+        font-weight: bolder;
+        font-size: 28pt;
       }
 
-      #container {
-        background-color: pink;
-        margin: 40px auto;
-        max-width: 800px;
-        padding: 38px 31px;
+      .grid-row {
+        display: flex;
+        justify-content: center;
+        align-content: space-around;
+        border-color: black;
+        margin: auto;
+        width: 320px;
       }
 
-      input {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 9px;
-        width: 100%;
+      .cell {
+        flex: 1;
+        height: 60px;
+        margin: 2px 2px 2px 2px;
+        border-color: black;
+        border-style: ridge;
+        font-size: 24pt;
+        text-align: center;
+        padding: 10px 0;
+        font-family: "Oxanium", cursive;
       }
 
-      button {
-        font-size: 21px;
-        line-height: 33px;
-        margin: 0 0 23px 0;
-        padding: 0 6px;
+      #keyboard-container {
+        text-align: center;
+        font-family: "Oxanium", cursive;
+        margin-top: 20px;
       }
 
-      #output-div {
-        background-color: lightgrey;
-        margin: 20px auto;
-        padding: 20px;
-        width: 100%;
+      .keyboard-row button {
+        font-size: 18pt;
+        text-align: center;
+        font-family: "Oxanium", cursive;
+        margin: 3px 1px 3px 1px;
+        width: 36px;
+        height: 40px;
+        cursor: pointer;
+      }
+      .keyboard-row .wide-button {
+        font-size: 18pt;
+        text-align: center;
+        font-family: "Oxanium", cursive;
+        margin: 4px 2px 4px 2px;
+        width: 60px;
+        height: 40px;
+        cursor: pointer;
       }
     </style>
   </head>
 
   <body>
     <h1 id="header">Wordle</h1>
-
-    <div id="container">
-      <p>Input:</p>
-      <input id="input-field" />
-      <br />
-      <button id="submit-button">Submit</button>
-      <p>Output:</p>
-      <div id="output-div"></div>
+    <div id="grid">
+      <div class="grid-row" id="row-1">
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+      </div>
+      <div class="grid-row" id="row-2">
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+      </div>
+      <div class="grid-row" id="row-3">
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+      </div>
+      <div class="grid-row" id="row-4">
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+      </div>
+      <div class="grid-row" id="row-5">
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+      </div>
+      <div class="grid-row" id="row-6">
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+      </div>
     </div>
 
-    <div id="past-output"></div>
+    <div id="keyboard-container">
+      <div class="keyboard-row">
+        <button data-key="q">q</button>
+        <button data-key="w">w</button>
+        <button data-key="e">e</button>
+        <button data-key="r">r</button>
+        <button data-key="t">t</button>
+        <button data-key="y">y</button>
+        <button data-key="u">u</button>
+        <button data-key="i">i</button>
+        <button data-key="o">o</button>
+        <button data-key="p">p</button>
+      </div>
+      <div class="keyboard-row">
+        <button data-key="a">a</button>
+        <button data-key="s">s</button>
+        <button data-key="d">d</button>
+        <button data-key="f">f</button>
+        <button data-key="g">g</button>
+        <button data-key="h">h</button>
+        <button data-key="j">j</button>
+        <button data-key="k">k</button>
+        <button data-key="l">l</button>
+      </div>
+      <div class="keyboard-row">
+        <button data-key="return" class="wide-button">⏎</button>
+        <button data-key="z">z</button>
+        <button data-key="x">x</button>
+        <button data-key="c">c</button>
+        <button data-key="v">v</button>
+        <button data-key="b">b</button>
+        <button data-key="n">n</button>
+        <button data-key="m">m</button>
+        <button data-key="delete" class="wide-button">⌫</button>
+      </div>
+    </div>
 
     <script src="word-bank.js"></script>
     <script src="script.js"></script>
     <script>
-      var button = document.querySelector("#submit-button");
-      button.addEventListener("click", function () {
-        var input = document.querySelector("#input-field");
+      // Keyboard actions: key in letters, delete, return
+      const keys = document.querySelectorAll(".keyboard-row button");
+      for (let i = 0; i < keys.length; i += 1) {
+        keys[i].onclick = (event) => {
+          const letter = event.target.getAttribute("data-key");
+          console.log(letter);
+          if (letter == "delete") {
+            removeLastLetter();
+          } else if (letter == "return") {
+            var currentGuess = getWord();
+            submitAnswer(currentGuess);
+          } else {
+            displayGuessedWord(letter);
+          }
+        };
+      }
 
-        var result = main(input.value);
+      // var button = document.querySelector("#submit-button");
+      // button.addEventListener("click", function () {
+      //   var input = document.querySelector("#input-field");
 
-        var output = document.querySelector("#output-div");
-        output.innerHTML = result;
+      //   var result = main(input.value);
 
-        var pastOutputField = document.querySelector("#past-output");
-        pastOutputField.innerHTML = pastOutput;
+      //   var output = document.querySelector("#output-div");
+      //   output.innerHTML = result;
 
-        input.value = "";
-      });
+      //   var pastOutputField = document.querySelector("#past-output");
+      //   pastOutputField.innerHTML = pastOutput;
+
+      //   input.value = "";
+      // });
     </script>
   </body>
 </html>
