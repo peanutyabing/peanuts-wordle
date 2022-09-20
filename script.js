@@ -6,6 +6,7 @@ var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 function submitAnswer(input) {
   if (validate(input)) {
     var resultArray = getResultArray(input, todaysAnswer);
+    cellCounter += 1; // Go to next row
     //// Display output for base render
     var myOutput = "";
     for (i = 0; i < input.length; i += 1) {
@@ -34,13 +35,21 @@ function displayGuessedWord(letter) {
   const cells = document.querySelectorAll(".cell");
   var currentCell = cells[cellCounter];
   currentCell.innerHTML = letter;
-  cellCounter += 1;
+  if (currentCell.id != 5) {
+    cellCounter += 1;
+  }
 }
 
 function removeLastLetter() {
   const cells = document.querySelectorAll(".cell");
+  var currentCell = cells[cellCounter];
   if (cellCounter < 1) {
-  } else {
+  } else if (currentCell.id == 5 && currentCell.innerHTML != "") {
+    currentCell.innerHTML = "";
+  } else if (
+    (currentCell.id == 5 && currentCell.innerHTML == "") ||
+    currentCell.id != 5
+  ) {
     var lastCell = cells[cellCounter - 1];
     lastCell.innerHTML = "";
     cellCounter -= 1;
