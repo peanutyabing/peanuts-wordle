@@ -43,8 +43,11 @@ function displayGuessedWord(letter) {
 function removeLastLetter() {
   const cells = document.querySelectorAll(".cell");
   var currentCell = cells[cellCounter];
-  if (cellCounter < 1) {
-  } else if (currentCell.id == 5 && currentCell.innerHTML != "") {
+  // Cannot delete into the last row
+  if (currentCell.id == 1 && currentCell.innerHTML == "") {
+  }
+  // Exception of delete logic at the last cell of each row
+  else if (currentCell.id == 5 && currentCell.innerHTML != "") {
     currentCell.innerHTML = "";
   } else if (
     (currentCell.id == 5 && currentCell.innerHTML == "") ||
