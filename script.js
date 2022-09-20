@@ -5,11 +5,11 @@ var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 
 function submitAnswer(input) {
   if (validate(input)) {
-    var resultMap = getResultMap(input, todaysAnswer);
+    var resultArray = getResultArray(input, todaysAnswer);
     //// Display output for base render
     var myOutput = "";
     for (i = 0; i < input.length; i += 1) {
-      myOutput += `${input[i]} is ${resultMap[i.toString()]}<br>`;
+      myOutput += `${input[i]} is ${resultArray[i]}<br>`;
     }
     pastOutput += myOutput + "<br>";
     console.log(myOutput);
@@ -79,37 +79,78 @@ function getLettersArray(anyWord) {
   return anyWord.split("");
 }
 
-// Breakdown any word into a hash map
-function getLettersObject(anyWord) {
-  let wordMap = {};
-  for (i = 0; i < anyWord.length; i += 1) {
-    wordMap[i.toString()] = anyWord[i];
-  }
-  console.log(wordMap);
-  return wordMap;
-}
-
-// Generate a hash map for the colour at each position
-function getResultMap(guess, answer) {
-  var resultMap = {};
+// Generate an array for the colour at each position
+function getResultArray(guess, answer) {
+  var resultArray = [];
   // Check for incorrect letters; everything else is yellow
   for (i = 0; i < guess.length; i += 1) {
     if (!answer.includes(guess[i])) {
-      resultMap[i.toString()] = "grey";
+      resultArray.push("grey");
     } else {
-      resultMap[i.toString()] = "yellow";
+      resultArray.push("yellow");
     }
   }
-  // Update yellow to green if the letter is in the correct location
-  for (entry in resultMap) {
-    if (resultMap[entry] == "yellow") {
-      if (answer[parseInt(entry)] == guess[parseInt(entry)]) {
-        resultMap[entry] = "green";
+
+  var greenLetters = [];
+  for (i = 0; i < guess.length; i += 1) {
+    if (resultArray[i] == "yellow") {
+      // Update yellow to green if the letter is in the correct location
+      if (guess[i] == answer[i]) {
+        resultArray[i] = "green";
+        greenLetters.push(guess[i]);
+      }
+      // Update yellow to grey, if the target letter is alr green elsewhere, and the letter does not appear elsewhere in the word
+      // E.g. the answer is "THEIR" and the guess is "THERE" -> the second "E" should be grey, not yellow, as the answer only has one "E"
+      // The logic: if this letter is in the answer more times than it was correctly guessed, then it should be yellow; otherwise, it should be grey
+      else if (
+        countOccurence(guess[i], greenLetters) >=
+        countOccurence(guess[i], getLettersArray(answer))
+      ) {
+        resultArray[i] = "gray";
       }
     }
   }
-  console.log(resultMap);
-  return resultMap;
+  console.log(resultArray);
+  return resultArray;
 }
 
-//You have to guess the Wordle in six goes or less
+function countOccurence(value, array) {
+  var occurence = array.filter((item) => item == value).length;
+  return occurence;
+}
+
+// //// Breakdown any word into a hash map (not in use)
+// function getLettersObject(anyWord) {
+//   let wordMap = {};
+//   for (i = 0; i < anyWord.length; i += 1) {
+//     wordMap[i.toString()] = anyWord[i];
+//   }
+//   console.log(wordMap);
+//   return wordMap;
+// }
+
+// // Generate a hash map for the colour at each position (not in use)
+// function getResultMap(guess, answer) {
+//   var resultMap = {};
+//   // Check for incorrect letters; everything else is yellow
+//   for (i = 0; i < guess.length; i += 1) {
+//     if (!answer.includes(guess[i])) {
+//       resultMap[i.toString()] = "grey";
+//     } else {
+//       resultMap[i.toString()] = "yellow";
+//     }
+//   }
+
+//   for (entry in resultMap) {
+//     if (resultMap[entry] == "yellow") {
+//       // Update yellow to green if the letter is in the correct location
+//       if (guess[parseInt(entry)] == answer[parseInt(entry)]) {
+//         resultMap[entry] = "green";
+//       }
+//       // Update yellow to grey, if the target letter is alr green elsewhere, and the letter does not appear elsewhere in the word
+//       // E.g. answer is "THEIR" and guess is "THERE" -> second "E" should be grey, not yellow
+//     }
+//   }
+//   console.log(resultMap);
+//   return resultMap;
+// }
