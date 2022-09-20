@@ -1,22 +1,27 @@
 var todaysAnswer = getTodaysWord();
-var pastOutput = ""; //// For the base render will delete later
-const guessedWords = []; //// Write a function later to add past guesses
+const guessedWords = [];
+const colourMap = {
+  green: "#96ceb4",
+  yellow: "#ffeead",
+  grey: "#e0e2e4",
+};
 var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 
 function submitAnswer(input) {
   if (validate(input)) {
     var resultArray = getResultArray(input, todaysAnswer);
-    cellCounter += 1; // Go to next row
-    //// Display output for base render
-    var myOutput = "";
-    for (i = 0; i < input.length; i += 1) {
-      myOutput += `${input[i]} is ${resultArray[i]}<br>`;
-    }
-    pastOutput += myOutput + "<br>";
-    console.log(myOutput);
+    cellCounter += 1; // Go to firs cell in next row
+
+    // Render coloured results
     guessedWords.push(input);
+    var currentRowNumber = guessedWords.length;
+    var currentRowId = "row-" + currentRowNumber.toString();
+    var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
+    for (i = 0; i < currentRowCells.length; i += 1) {
+      updateColour(currentRowCells[i], resultArray[i]);
+    }
   } else {
-    //// Display some kind of message e.g. "your guess is not a valid word"
+    alert(`${input} is not a valid word.`);
   }
   // return myOutput;
 }
@@ -118,7 +123,7 @@ function getResultArray(guess, answer) {
         countOccurence(guess[i], greenLetters) >=
         countOccurence(guess[i], getLettersArray(answer))
       ) {
-        resultArray[i] = "gray";
+        resultArray[i] = "grey";
       }
     }
   }
@@ -129,6 +134,10 @@ function getResultArray(guess, answer) {
 function countOccurence(value, array) {
   var occurence = array.filter((item) => item == value).length;
   return occurence;
+}
+
+function updateColour(cell, colour) {
+  cell.style.backgroundColor = colourMap[colour];
 }
 
 // //// Breakdown any word into a hash map (not in use)
