@@ -3,22 +3,29 @@ const guessedWords = [];
 const colourMap = {
   green: "#96ceb4",
   yellow: "#ffeead",
-  grey: "#e0e2e4",
+  grey: "#888888",
 };
+var letterMap = generateLetterMap();
 var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 
 function submitAnswer(input) {
   if (validate(input)) {
     var resultArray = getResultArray(input, todaysAnswer);
     cellCounter += 1; // Go to firs cell in next row
-
-    // Render coloured results
     guessedWords.push(input);
+
+    // Render coloured cells
     var currentRowNumber = guessedWords.length;
     var currentRowId = "row-" + currentRowNumber.toString();
     var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
     for (i = 0; i < currentRowCells.length; i += 1) {
       updateColour(currentRowCells[i], resultArray[i]);
+    }
+
+    // Render coloured keyboard buttons
+    for (i = 0; i < input.length; i += 1) {
+      var key = document.querySelector(`[data-key="${input[i]}"]`);
+      updateColour(key, letterMap[input[i]]);
     }
   } else {
     alert(`${input} is not a valid word.`);
@@ -103,8 +110,10 @@ function getResultArray(guess, answer) {
   for (i = 0; i < guess.length; i += 1) {
     if (!answer.includes(guess[i])) {
       resultArray.push("grey");
+      letterMap[guess[i]] = "grey";
     } else {
       resultArray.push("yellow");
+      letterMap[guess[i]] = "yellow";
     }
   }
 
@@ -115,6 +124,7 @@ function getResultArray(guess, answer) {
       if (guess[i] == answer[i]) {
         resultArray[i] = "green";
         greenLetters.push(guess[i]);
+        letterMap[guess[i]] = "green";
       }
       // Update yellow to grey, if the target letter is alr green elsewhere, and the letter does not appear elsewhere in the word
       // E.g. the answer is "THEIR" and the guess is "THERE" -> the second "E" should be grey, not yellow, as the answer only has one "E"
@@ -136,8 +146,44 @@ function countOccurence(value, array) {
   return occurence;
 }
 
-function updateColour(cell, colour) {
-  cell.style.backgroundColor = colourMap[colour];
+function updateColour(element, colour) {
+  element.style.backgroundColor = colourMap[colour];
+}
+
+function generateLetterMap() {
+  const letterMap = {};
+  const alphabet = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+  ];
+  for (i = 0; i < alphabet.length; i += 1) {
+    letterMap[alphabet[i]] = "";
+  }
+  return letterMap;
 }
 
 // //// Breakdown any word into a hash map (not in use)
