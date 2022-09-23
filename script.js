@@ -27,15 +27,35 @@ function submitAnswer(input) {
       var key = document.querySelector(`[data-key="${input[i]}"]`);
       updateColour(key, keyColourMap[input[i]]);
     }
+
+    // Game outcome alert messages
+    if (!resultColours.includes("yellow") && !resultColours.includes("grey")) {
+      setTimeout(() => {
+        alert(
+          `Congrats! "${input}" is the correct word. Number of attempts: ${guessedWords.length}.`
+        );
+      }, 500);
+
+      var keys = document.querySelectorAll("#key");
+      for (let i = 0; i < keys.length; i += 1) {
+        keys[i].onclick = () => {};
+      } // Disable on-screen keyboard after game ends
+      document.onkeyup = function () {}; // Disable physical keyboard after game ends
+    } else if (guessedWords.length >= 6) {
+      setTimeout(() => {
+        alert(`You ran out of tries! The answer is "${todaysAnswer}".`);
+      }, 500);
+    }
   } else {
-    alert(`${input} is not a valid word.`);
+    setTimeout(() => {
+      alert(`${input} is not in the word list. Try something else!`);
+    }, 500);
   }
-  // return myOutput;
 }
 
 // Generate today's word
 function getTodaysWord() {
-  let startDate = new Date("09/01/2022");
+  let startDate = new Date("09/10/2022");
   let today = new Date();
   let timePassed = today.getTime() - startDate.getTime();
   var offset = Math.ceil(timePassed / (1000 * 3600 * 24));
@@ -88,7 +108,7 @@ function getResultColours(guess, answer) {
   var answerArray = getLettersArray(answer);
 
   // Starting state to be updated
-  var resultColours = ["grey", "grey", "grey", "grey", "grey"];
+  var resultColours = Array(5).fill("grey");
   for (i = 0; i < guess.length; i += 1) {
     keyColourMap[guess[i]] = "grey";
   }

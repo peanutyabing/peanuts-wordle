@@ -17,6 +17,7 @@
     <style>
       * {
         box-sizing: border-box;
+        background-color: #fdfaf2;
       }
 
       #header {
@@ -24,6 +25,7 @@
         font-family: "Satisfy", cursive;
         font-weight: bolder;
         font-size: 36pt;
+        margin-bottom: 0;
       }
 
       body {
@@ -42,12 +44,16 @@
         flex: 1;
         height: 60px;
         margin: 2px 2px 2px 2px;
-        border-color: black;
-        border-style: ridge;
+        border-color: #36454f;
+        border-style: solid;
+        border-width: 1px;
         font-size: 24pt;
         text-align: center;
         padding: 10px 0;
         font-family: "Roboto", sans-serif;
+        -webkit-box-shadow: 1px 1px 3px 0px rgba(136, 136, 136, 1);
+        -moz-box-shadow: 1px 1px 3px 0px rgba(136, 136, 136, 1);
+        box-shadow: 1px 1px 3px 0px rgba(136, 136, 136, 1);
       }
 
       #keyboard-container {
@@ -169,7 +175,7 @@
     <script src="script.js"></script>
     <script>
       // On-screen keyboard actions: key in letters, delete, return
-      const keys = document.querySelectorAll(".keyboard-row #key");
+      const keys = document.querySelectorAll("#key");
       for (let i = 0; i < keys.length; i += 1) {
         keys[i].onclick = (event) => {
           const letter = event.target.getAttribute("data-key");
