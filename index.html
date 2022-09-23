@@ -19,17 +19,15 @@
         box-sizing: border-box;
       }
 
-      /* body {
-        font-family: "Archivo Narrow", sans-serif;
-        margin-left: 30px;
-        margin-right: 30px;
-      } */
-
       #header {
         text-align: center;
         font-family: "Satisfy", cursive;
         font-weight: bolder;
         font-size: 36pt;
+      }
+
+      body {
+        touch-action: manipulation;
       }
 
       .grid-row {
@@ -54,7 +52,6 @@
 
       #keyboard-container {
         text-align: center;
-        font-family: "Archivo Narrow", sans-serif;
         margin-top: 20px;
       }
 
@@ -74,20 +71,10 @@
         border-radius: 8%;
         font-size: 14pt;
         text-align: center;
-        padding: 4px 0 4px 0;
-        font-family: "Archivo Narrow", sans-serif;
+        padding-top: 5px;
+        font-family: "Roboto", sans-serif;
         margin: 1px 0.5px 1px 0.5px;
         width: 25px;
-        height: 36px;
-        cursor: pointer;
-      }
-
-      .keyboard-row .wide-button {
-        font-size: 12pt;
-        text-align: center;
-        font-family: "Archivo Narrow", sans-serif;
-        margin: 4px 2px 4px 2px;
-        width: 36px;
         height: 36px;
         cursor: pointer;
       }
@@ -166,7 +153,7 @@
         <div id="key" data-key="l">l</div>
       </div>
       <div class="keyboard-row">
-        <div id="key" data-key="return" class="wide-button">⏎</div>
+        <div id="key" data-key="return">⏎</div>
         <div id="key" data-key="z">z</div>
         <div id="key" data-key="x">x</div>
         <div id="key" data-key="c">c</div>
@@ -174,14 +161,14 @@
         <div id="key" data-key="b">b</div>
         <div id="key" data-key="n">n</div>
         <div id="key" data-key="m">m</div>
-        <div id="key" data-key="delete" class="wide-button">⌫</div>
+        <div id="key" data-key="delete">⌫</div>
       </div>
     </div>
 
     <script src="word-bank.js"></script>
     <script src="script.js"></script>
     <script>
-      // Keyboard actions: key in letters, delete, return
+      // On-screen keyboard actions: key in letters, delete, return
       const keys = document.querySelectorAll(".keyboard-row #key");
       for (let i = 0; i < keys.length; i += 1) {
         keys[i].onclick = (event) => {
@@ -197,6 +184,19 @@
           }
         };
       }
+
+      // Computer keyboard actions with input validation
+      document.onkeyup = (event) => {
+        const keyPressed = event.key;
+        if (keyPressed == "Backspace") {
+          removeLastLetter();
+        } else if (keyPressed == "Enter") {
+          var currentGuess = getWord();
+          submitAnswer(currentGuess);
+        } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
+          displayGuessedWord(keyPressed.toLowerCase());
+        }
+      };
     </script>
   </body>
 </html>

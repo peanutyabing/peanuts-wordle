@@ -10,7 +10,7 @@ var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 
 function submitAnswer(input) {
   if (validate(input)) {
-    var resultArray = getResultArray(input, todaysAnswer);
+    var resultColours = getResultColours(input, todaysAnswer);
     cellCounter += 1; // Go to firs cell in next row
     guessedWords.push(input);
 
@@ -19,7 +19,7 @@ function submitAnswer(input) {
     var currentRowId = "row-" + currentRowNumber.toString();
     var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
     for (i = 0; i < currentRowCells.length; i += 1) {
-      updateColour(currentRowCells[i], resultArray[i]);
+      updateColour(currentRowCells[i], resultColours[i]);
     }
 
     // Render coloured keyboard buttons
@@ -35,7 +35,7 @@ function submitAnswer(input) {
 
 // Generate today's word
 function getTodaysWord() {
-  let startDate = new Date("09/19/2018");
+  let startDate = new Date("09/01/2022");
   let today = new Date();
   let timePassed = today.getTime() - startDate.getTime();
   var offset = Math.ceil(timePassed / (1000 * 3600 * 24));
@@ -74,8 +74,6 @@ function removeLastLetter() {
 // Check if player's guess is in the word bank
 function validate(guess) {
   let firstLetter = guess[0];
-  // console.log(`first letter ${firstLetter}`);
-  // console.log(`${indexedWords[firstLetter]}`);
   if (indexedWords[firstLetter].includes(guess)) {
     console.log(`${guess} is a word.`);
     return true;
@@ -86,11 +84,11 @@ function validate(guess) {
 }
 
 // Generate an array for the colour at each position
-function getResultArray(guess, answer) {
+function getResultColours(guess, answer) {
   var answerArray = getLettersArray(answer);
 
   // Starting state to be updated
-  var resultArray = ["grey", "grey", "grey", "grey", "grey"];
+  var resultColours = ["grey", "grey", "grey", "grey", "grey"];
   for (i = 0; i < guess.length; i += 1) {
     keyColourMap[guess[i]] = "grey";
   }
@@ -100,77 +98,33 @@ function getResultArray(guess, answer) {
   // First round: check for correct/green letters
   for (i = 0; i < guess.length; i += 1) {
     if (guess[i] == answer[i]) {
-      resultArray[i] = "green";
+      resultColours[i] = "green";
       // greenLetters.push(guess[i]);
       answerArray[i] = null;
       keyColourMap[guess[i]] = "green";
     }
-    // if (!answer.includes(guess[i])) {
-    //   resultArray.push("grey");
-    //   keyColourMap[guess[i]] = "grey";
-    // } else {
-    //   resultArray.push("yellow");
-    //   keyColourMap[guess[i]] = "yellow";
-    // }
   }
-  console.log("just checked for green");
-  console.log(resultArray);
+  console.log("After checking for green:");
+  console.log(resultColours);
   console.log(answerArray);
   console.log(keyColourMap);
 
   // Second round: check for yellow letters
   for (i = 0; i < guess.length; i += 1) {
-    if (resultArray[i] == "green") {
+    if (resultColours[i] == "green") {
       // Skip if the letter is already green
     } else if (answerArray.includes(guess[i])) {
-      resultArray[i] = "yellow";
+      resultColours[i] = "yellow";
       var index = answerArray.indexOf(guess[i]);
       answerArray.splice(index, 1, null);
       keyColourMap[guess[i]] = "yellow";
     }
   }
-  console.log("just checked for yellow");
-  console.log(resultArray);
+  console.log("After checking for yellow");
+  console.log(resultColours);
   console.log(answerArray);
   console.log(keyColourMap);
-  // for (i = 0; i < guess.length; i += 1) {
-  //   if (resultArray[i] == "grey" && answer.includes(guess[i])) {
-  //     resultArray[i] = "yellow";
-  //     keyColourMap[guess[i]] = "yellow";
-  //   }
-  // }
-
-  // for (i = 0; i < guess.length; i += 1) {
-  //   if (
-  //     resultArray[i] == "yellow" &&
-  //     countOccurence(guess[i], greenLetters) >=
-  //       countOccurence(guess[i], getLettersArray(answer))
-  //   ) {
-  //     resultArray[i] = "grey";
-  //   }
-  // }
-
-  // for (i = 0; i < guess.length; i += 1) {
-  //   if (resultArray[i] == "yellow") {
-  //     // Update yellow to green if the letter is in the correct location
-  //     if (guess[i] == answer[i]) {
-  //       resultArray[i] = "green";
-  //       greenLetters.push(guess[i]);
-  //       keyColourMap[guess[i]] = "green";
-  //     }
-  //     // Update yellow to grey, if the target letter is alr green elsewhere, and the letter does not appear elsewhere in the word
-  //     // E.g. the answer is "THEIR" and the guess is "THERE" -> the second "E" should be grey, not yellow, as the answer only has one "E"
-  //     // The logic: if this letter is in the answer more times than it was correctly guessed, then it should be yellow; otherwise, it should be grey
-  //     else if (
-  //       countOccurence(guess[i], greenLetters) >=
-  //       countOccurence(guess[i], getLettersArray(answer))
-  //     ) {
-  //       resultArray[i] = "grey";
-  //     }
-  //   }
-  // }
-  console.log(resultArray);
-  return resultArray;
+  return resultColours;
 }
 
 // HELPER FUNCTIONS
@@ -184,7 +138,6 @@ function getWord() {
   for (i = 0; i < currentRowCells.length; i += 1) {
     word += currentRowCells[i].innerHTML;
   }
-  console.log(word);
   return word;
 }
 // Breakdown any word into an array of letters
@@ -236,39 +189,3 @@ function generatekeyColourMap() {
   }
   return keyColourMap;
 }
-
-// //// Breakdown any word into a hash map (not in use)
-// function getLettersObject(anyWord) {
-//   let wordMap = {};
-//   for (i = 0; i < anyWord.length; i += 1) {
-//     wordMap[i.toString()] = anyWord[i];
-//   }
-//   console.log(wordMap);
-//   return wordMap;
-// }
-
-// // Generate a hash map for the colour at each position (not in use)
-// function getResultMap(guess, answer) {
-//   var resultMap = {};
-//   // Check for incorrect letters; everything else is yellow
-//   for (i = 0; i < guess.length; i += 1) {
-//     if (!answer.includes(guess[i])) {
-//       resultMap[i.toString()] = "grey";
-//     } else {
-//       resultMap[i.toString()] = "yellow";
-//     }
-//   }
-
-//   for (entry in resultMap) {
-//     if (resultMap[entry] == "yellow") {
-//       // Update yellow to green if the letter is in the correct location
-//       if (guess[parseInt(entry)] == answer[parseInt(entry)]) {
-//         resultMap[entry] = "green";
-//       }
-//       // Update yellow to grey, if the target letter is alr green elsewhere, and the letter does not appear elsewhere in the word
-//       // E.g. answer is "THEIR" and guess is "THERE" -> second "E" should be grey, not yellow
-//     }
-//   }
-//   console.log(resultMap);
-//   return resultMap;
-// }
