@@ -32,6 +32,108 @@
         touch-action: manipulation;
       }
 
+      .container {
+        width: 320px;
+        margin: 0 auto;
+      }
+
+      .game-modes {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      /* Customised checkbox container */
+      .checkbox {
+        font-family: "Roboto", sans-serif;
+        font-size: 12pt;
+        display: inline-block;
+        position: relative;
+        padding-left: 35px;
+        margin-left: 2px;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: #ccc;
+        border-radius: 15%;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .checkbox:hover input ~ .checkmark {
+        background-color: #888888;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .checkbox input:checked ~ .checkmark {
+        background-color: #2196f3;
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .checkbox input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .checkbox .checkmark:after {
+        left: 8px;
+        top: 2px;
+        width: 2px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+
+      button {
+        background-color: #ccc;
+        border: 1px solid #ccc;
+        /* color: white; */
+        padding: 6px 16px 6px 16px;
+        text-align: center;
+        font-family: "Roboto", sans-serif;
+        font-size: 12pt;
+        text-decoration: none;
+        display: inline-block;
+        margin: 0 0 0 100px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 5%;
+      }
+
+      button:hover {
+        background-color: #888888;
+        color: black;
+        border: 1px solid #ccc;
+      }
+
       .grid-row {
         display: flex;
         justify-content: center;
@@ -88,121 +190,150 @@
   </head>
 
   <body>
-    <h1 id="header">Wordle</h1>
-    <div id="grid">
-      <div class="grid-row" id="row-1">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
+    <div class="container">
+      <h1 id="header">Wordle</h1>
+      <div class="game-modes">
+        <label class="checkbox"
+          >Unlimited
+          <input type="checkbox" id="unlimited" />
+          <span class="checkmark"></span>
+        </label>
+        <button id="play-again">Play again</button>
       </div>
-      <div class="grid-row" id="row-2">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
+      <div id="grid">
+        <div class="grid-row" id="row-1">
+          <div class="cell" id="1"></div>
+          <div class="cell" id="2"></div>
+          <div class="cell" id="3"></div>
+          <div class="cell" id="4"></div>
+          <div class="cell" id="5"></div>
+        </div>
+        <div class="grid-row" id="row-2">
+          <div class="cell" id="1"></div>
+          <div class="cell" id="2"></div>
+          <div class="cell" id="3"></div>
+          <div class="cell" id="4"></div>
+          <div class="cell" id="5"></div>
+        </div>
+        <div class="grid-row" id="row-3">
+          <div class="cell" id="1"></div>
+          <div class="cell" id="2"></div>
+          <div class="cell" id="3"></div>
+          <div class="cell" id="4"></div>
+          <div class="cell" id="5"></div>
+        </div>
+        <div class="grid-row" id="row-4">
+          <div class="cell" id="1"></div>
+          <div class="cell" id="2"></div>
+          <div class="cell" id="3"></div>
+          <div class="cell" id="4"></div>
+          <div class="cell" id="5"></div>
+        </div>
+        <div class="grid-row" id="row-5">
+          <div class="cell" id="1"></div>
+          <div class="cell" id="2"></div>
+          <div class="cell" id="3"></div>
+          <div class="cell" id="4"></div>
+          <div class="cell" id="5"></div>
+        </div>
+        <div class="grid-row" id="row-6">
+          <div class="cell" id="1"></div>
+          <div class="cell" id="2"></div>
+          <div class="cell" id="3"></div>
+          <div class="cell" id="4"></div>
+          <div class="cell" id="5"></div>
+        </div>
       </div>
-      <div class="grid-row" id="row-3">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-      </div>
-      <div class="grid-row" id="row-4">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-      </div>
-      <div class="grid-row" id="row-5">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-      </div>
-      <div class="grid-row" id="row-6">
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-      </div>
-    </div>
 
-    <div id="keyboard-container">
-      <div class="keyboard-row">
-        <div id="key" data-key="q">q</div>
-        <div id="key" data-key="w">w</div>
-        <div id="key" data-key="e">e</div>
-        <div id="key" data-key="r">r</div>
-        <div id="key" data-key="t">t</div>
-        <div id="key" data-key="y">y</div>
-        <div id="key" data-key="u">u</div>
-        <div id="key" data-key="i">i</div>
-        <div id="key" data-key="o">o</div>
-        <div id="key" data-key="p">p</div>
-      </div>
-      <div class="keyboard-row">
-        <div id="key" data-key="a">a</div>
-        <div id="key" data-key="s">s</div>
-        <div id="key" data-key="d">d</div>
-        <div id="key" data-key="f">f</div>
-        <div id="key" data-key="g">g</div>
-        <div id="key" data-key="h">h</div>
-        <div id="key" data-key="j">j</div>
-        <div id="key" data-key="k">k</div>
-        <div id="key" data-key="l">l</div>
-      </div>
-      <div class="keyboard-row">
-        <div id="key" data-key="return">⏎</div>
-        <div id="key" data-key="z">z</div>
-        <div id="key" data-key="x">x</div>
-        <div id="key" data-key="c">c</div>
-        <div id="key" data-key="v">v</div>
-        <div id="key" data-key="b">b</div>
-        <div id="key" data-key="n">n</div>
-        <div id="key" data-key="m">m</div>
-        <div id="key" data-key="delete">⌫</div>
+      <div id="keyboard-container">
+        <div class="keyboard-row">
+          <div id="key" data-key="q">q</div>
+          <div id="key" data-key="w">w</div>
+          <div id="key" data-key="e">e</div>
+          <div id="key" data-key="r">r</div>
+          <div id="key" data-key="t">t</div>
+          <div id="key" data-key="y">y</div>
+          <div id="key" data-key="u">u</div>
+          <div id="key" data-key="i">i</div>
+          <div id="key" data-key="o">o</div>
+          <div id="key" data-key="p">p</div>
+        </div>
+        <div class="keyboard-row">
+          <div id="key" data-key="a">a</div>
+          <div id="key" data-key="s">s</div>
+          <div id="key" data-key="d">d</div>
+          <div id="key" data-key="f">f</div>
+          <div id="key" data-key="g">g</div>
+          <div id="key" data-key="h">h</div>
+          <div id="key" data-key="j">j</div>
+          <div id="key" data-key="k">k</div>
+          <div id="key" data-key="l">l</div>
+        </div>
+        <div class="keyboard-row">
+          <div id="key" data-key="return">⏎</div>
+          <div id="key" data-key="z">z</div>
+          <div id="key" data-key="x">x</div>
+          <div id="key" data-key="c">c</div>
+          <div id="key" data-key="v">v</div>
+          <div id="key" data-key="b">b</div>
+          <div id="key" data-key="n">n</div>
+          <div id="key" data-key="m">m</div>
+          <div id="key" data-key="delete">⌫</div>
+        </div>
       </div>
     </div>
 
     <script src="word-bank.js"></script>
     <script src="script.js"></script>
     <script>
-      // On-screen keyboard actions: key in letters, delete, return
-      const keys = document.querySelectorAll("#key");
-      for (let i = 0; i < keys.length; i += 1) {
-        keys[i].onclick = (event) => {
-          const letter = event.target.getAttribute("data-key");
-          // console.log(letter);
-          if (letter == "delete") {
-            removeLastLetter();
-          } else if (letter == "return") {
-            var currentGuess = getWord();
-            submitAnswer(currentGuess);
-          } else {
-            displayGuessedWord(letter);
-          }
-        };
-      }
+      // Change between normal and unlimited mode
+      var unlimitedButton = document.querySelector("#unlimited");
+      unlimitedButton.addEventListener("click", () => {
+        unlimitedMode = unlimitedButton.checked;
+      });
 
-      // Computer keyboard actions with input validation
-      document.onkeyup = (event) => {
-        const keyPressed = event.key;
-        if (keyPressed == "Backspace") {
-          removeLastLetter();
-        } else if (keyPressed == "Enter") {
-          var currentGuess = getWord();
-          submitAnswer(currentGuess);
-        } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
-          displayGuessedWord(keyPressed.toLowerCase());
+      // Play a new round on unlimited mode
+      var playAgainButton = document.querySelector("#play-again");
+      playAgainButton.addEventListener("click", () => {
+        if (unlimitedMode) {
+          resetGrid();
+          resetKeyboard();
+          activateKeyboard();
+          guessedWords.length = 0;
+          cellCounter = 0;
+          randomAnswer = getRandomWord();
         }
-      };
+      });
+
+      // // On-screen keyboard actions: key in letters, delete, return
+      // const keys = document.querySelectorAll("#key");
+      // for (let i = 0; i < keys.length; i += 1) {
+      //   keys[i].onclick = (event) => {
+      //     const letter = event.target.getAttribute("data-key");
+      //     // console.log(letter);
+      //     if (letter == "delete") {
+      //       removeLastLetter();
+      //     } else if (letter == "return") {
+      //       var currentGuess = getWord();
+      //       submitAnswer(currentGuess);
+      //     } else {
+      //       displayGuessedWord(letter);
+      //     }
+      //   };
+      // }
+
+      // // Computer keyboard actions with input validation
+      // document.onkeyup = (event) => {
+      //   const keyPressed = event.key;
+      //   if (keyPressed == "Backspace") {
+      //     removeLastLetter();
+      //   } else if (keyPressed == "Enter") {
+      //     var currentGuess = getWord();
+      //     submitAnswer(currentGuess);
+      //   } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
+      //     displayGuessedWord(keyPressed.toLowerCase());
+      //   }
+      // };
     </script>
   </body>
 </html>

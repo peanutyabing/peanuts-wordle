@@ -1,4 +1,7 @@
-var todaysAnswer = getTodaysWord();
+activateKeyboard();
+var correctAnswer = "";
+var randomAnswer = getRandomWord();
+var todaysFixedAnswer = getTodaysWord();
 const guessedWords = [];
 const colourPalette = {
   green: "#96ceb4",
@@ -7,10 +10,17 @@ const colourPalette = {
 };
 var keyColourMap = generatekeyColourMap();
 var cellCounter = 0; // Keeps track of where the next letter goes in the grid
+let unlimitedMode = false;
 
 function submitAnswer(input) {
+  if (unlimitedMode) {
+    correctAnswer = randomAnswer;
+  } else {
+    correctAnswer = todaysFixedAnswer;
+  }
+
   if (validate(input)) {
-    var resultColours = getResultColours(input, todaysAnswer);
+    var resultColours = getResultColours(input, correctAnswer);
     cellCounter += 1; // Go to firs cell in next row
     guessedWords.push(input);
 
@@ -18,12 +28,12 @@ function submitAnswer(input) {
     var currentRowNumber = guessedWords.length;
     var currentRowId = "row-" + currentRowNumber.toString();
     var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
-    for (i = 0; i < currentRowCells.length; i += 1) {
+    for (let i = 0; i < currentRowCells.length; i += 1) {
       updateColour(currentRowCells[i], resultColours[i]);
     }
 
     // Render coloured keyboard buttons
-    for (i = 0; i < input.length; i += 1) {
+    for (let i = 0; i < input.length; i += 1) {
       var key = document.querySelector(`[data-key="${input[i]}"]`);
       updateColour(key, keyColourMap[input[i]]);
     }
@@ -35,16 +45,16 @@ function submitAnswer(input) {
           `Congrats! "${input}" is the correct word. Number of attempts: ${guessedWords.length}.`
         );
       }, 500);
-
-      var keys = document.querySelectorAll("#key");
-      for (let i = 0; i < keys.length; i += 1) {
-        keys[i].onclick = () => {};
-      } // Disable on-screen keyboard after game ends
-      document.onkeyup = function () {}; // Disable physical keyboard after game ends
+      if (!unlimitedMode) {
+        disableKeyboard();
+      }
     } else if (guessedWords.length >= 6) {
       setTimeout(() => {
-        alert(`You ran out of tries! The answer is "${todaysAnswer}".`);
+        alert(`You ran out of tries! The answer is "${correctAnswer}".`);
       }, 500);
+      if (!unlimitedMode) {
+        disableKeyboard();
+      }
     }
   } else {
     setTimeout(() => {
@@ -61,6 +71,13 @@ function getTodaysWord() {
   var offset = Math.ceil(timePassed / (1000 * 3600 * 24));
   var todaysWord = words[offset];
   return todaysWord;
+}
+
+// Generate a random word for unlimted mode
+function getRandomWord() {
+  var randomIndex = Math.floor(Math.random() * words.length);
+  var randomWord = words[randomIndex];
+  return randomWord;
 }
 
 function displayGuessedWord(letter) {
@@ -104,20 +121,18 @@ function validate(guess) {
 }
 
 // Generate an array for the colour at each position
-function getResultColours(guess, answer) {
-  var answerArray = getLettersArray(answer);
+function getResultColours(guess, correctAnswer) {
+  var answerArray = getLettersArray(correctAnswer);
 
   // Starting state to be updated
   var resultColours = Array(5).fill("grey");
-  for (i = 0; i < guess.length; i += 1) {
+  for (let i = 0; i < guess.length; i += 1) {
     keyColourMap[guess[i]] = "grey";
   }
 
-  // var greenLetters = [];
-
   // First round: check for correct/green letters
-  for (i = 0; i < guess.length; i += 1) {
-    if (guess[i] == answer[i]) {
+  for (let i = 0; i < guess.length; i += 1) {
+    if (guess[i] == correctAnswer[i]) {
       resultColours[i] = "green";
       // greenLetters.push(guess[i]);
       answerArray[i] = null;
@@ -130,7 +145,7 @@ function getResultColours(guess, answer) {
   console.log(keyColourMap);
 
   // Second round: check for yellow letters
-  for (i = 0; i < guess.length; i += 1) {
+  for (let i = 0; i < guess.length; i += 1) {
     if (resultColours[i] == "green") {
       // Skip if the letter is already green
     } else if (answerArray.includes(guess[i])) {
@@ -155,7 +170,7 @@ function getWord() {
   var currentRowIndex = guessedWords.length;
   var currentRowId = "row-" + (currentRowIndex + 1).toString();
   var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
-  for (i = 0; i < currentRowCells.length; i += 1) {
+  for (let i = 0; i < currentRowCells.length; i += 1) {
     word += currentRowCells[i].innerHTML;
   }
   return word;
@@ -204,8 +219,61 @@ function generatekeyColourMap() {
     "y",
     "z",
   ];
-  for (i = 0; i < alphabet.length; i += 1) {
+  for (let i = 0; i < alphabet.length; i += 1) {
     keyColourMap[alphabet[i]] = "";
   }
   return keyColourMap;
+}
+
+function resetGrid() {
+  const cells = document.querySelectorAll(".cell");
+  for (let i = 0; i < cells.length; i += 1) {
+    cells[i].innerHTML = "";
+    cells[i].style.backgroundColor = "";
+  }
+}
+
+function resetKeyboard() {
+  const keys = document.querySelectorAll("#key");
+  for (let i = 0; i < keys.length; i += 1) {
+    keys[i].style.backgroundColor = "";
+  }
+}
+
+function disableKeyboard() {
+  var keys = document.querySelectorAll("#key");
+  for (let i = 0; i < keys.length; i += 1) {
+    keys[i].onclick = () => {};
+  } // Disable on-screen keyboard after game ends
+  document.onkeyup = function () {}; // Disable physical keyboard after game ends
+}
+
+function activateKeyboard() {
+  const keys = document.querySelectorAll("#key");
+  for (let i = 0; i < keys.length; i += 1) {
+    keys[i].onclick = (event) => {
+      const letter = event.target.getAttribute("data-key");
+      // console.log(letter);
+      if (letter == "delete") {
+        removeLastLetter();
+      } else if (letter == "return") {
+        var currentGuess = getWord();
+        submitAnswer(currentGuess);
+      } else {
+        displayGuessedWord(letter);
+      }
+    };
+
+    document.onkeyup = (event) => {
+      const keyPressed = event.key;
+      if (keyPressed == "Backspace") {
+        removeLastLetter();
+      } else if (keyPressed == "Enter") {
+        var currentGuess = getWord();
+        submitAnswer(currentGuess);
+      } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
+        displayGuessedWord(keyPressed.toLowerCase());
+      }
+    };
+  }
 }
