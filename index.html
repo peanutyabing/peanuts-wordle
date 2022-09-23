@@ -36,7 +36,6 @@
         display: flex;
         justify-content: center;
         align-content: space-around;
-        border-color: black;
         margin: auto;
         width: 320px;
       }
@@ -59,15 +58,30 @@
         margin-top: 20px;
       }
 
-      .keyboard-row button {
-        font-size: 12pt;
+      .keyboard-row {
+        display: flex;
+        justify-content: center;
+        align-content: space-around;
+        margin: auto;
+        width: 320px;
+      }
+
+      #key {
+        flex: 1;
+        border-width: 0.5px;
+        border-style: solid;
+        border-color: grey;
+        border-radius: 8%;
+        font-size: 14pt;
         text-align: center;
+        padding: 4px 0 4px 0;
         font-family: "Archivo Narrow", sans-serif;
-        margin: 2px 0.5px 2px 0.5px;
+        margin: 1px 0.5px 1px 0.5px;
         width: 25px;
         height: 36px;
         cursor: pointer;
       }
+
       .keyboard-row .wide-button {
         font-size: 12pt;
         text-align: center;
@@ -129,38 +143,38 @@
 
     <div id="keyboard-container">
       <div class="keyboard-row">
-        <button data-key="q">q</button>
-        <button data-key="w">w</button>
-        <button data-key="e">e</button>
-        <button data-key="r">r</button>
-        <button data-key="t">t</button>
-        <button data-key="y">y</button>
-        <button data-key="u">u</button>
-        <button data-key="i">i</button>
-        <button data-key="o">o</button>
-        <button data-key="p">p</button>
+        <div id="key" data-key="q">q</div>
+        <div id="key" data-key="w">w</div>
+        <div id="key" data-key="e">e</div>
+        <div id="key" data-key="r">r</div>
+        <div id="key" data-key="t">t</div>
+        <div id="key" data-key="y">y</div>
+        <div id="key" data-key="u">u</div>
+        <div id="key" data-key="i">i</div>
+        <div id="key" data-key="o">o</div>
+        <div id="key" data-key="p">p</div>
       </div>
       <div class="keyboard-row">
-        <button data-key="a">a</button>
-        <button data-key="s">s</button>
-        <button data-key="d">d</button>
-        <button data-key="f">f</button>
-        <button data-key="g">g</button>
-        <button data-key="h">h</button>
-        <button data-key="j">j</button>
-        <button data-key="k">k</button>
-        <button data-key="l">l</button>
+        <div id="key" data-key="a">a</div>
+        <div id="key" data-key="s">s</div>
+        <div id="key" data-key="d">d</div>
+        <div id="key" data-key="f">f</div>
+        <div id="key" data-key="g">g</div>
+        <div id="key" data-key="h">h</div>
+        <div id="key" data-key="j">j</div>
+        <div id="key" data-key="k">k</div>
+        <div id="key" data-key="l">l</div>
       </div>
       <div class="keyboard-row">
-        <button data-key="return" class="wide-button">⏎</button>
-        <button data-key="z">z</button>
-        <button data-key="x">x</button>
-        <button data-key="c">c</button>
-        <button data-key="v">v</button>
-        <button data-key="b">b</button>
-        <button data-key="n">n</button>
-        <button data-key="m">m</button>
-        <button data-key="delete" class="wide-button">⌫</button>
+        <div id="key" data-key="return" class="wide-button">⏎</div>
+        <div id="key" data-key="z">z</div>
+        <div id="key" data-key="x">x</div>
+        <div id="key" data-key="c">c</div>
+        <div id="key" data-key="v">v</div>
+        <div id="key" data-key="b">b</div>
+        <div id="key" data-key="n">n</div>
+        <div id="key" data-key="m">m</div>
+        <div id="key" data-key="delete" class="wide-button">⌫</div>
       </div>
     </div>
 
@@ -168,7 +182,7 @@
     <script src="script.js"></script>
     <script>
       // Keyboard actions: key in letters, delete, return
-      const keys = document.querySelectorAll(".keyboard-row button");
+      const keys = document.querySelectorAll(".keyboard-row #key");
       for (let i = 0; i < keys.length; i += 1) {
         keys[i].onclick = (event) => {
           const letter = event.target.getAttribute("data-key");
