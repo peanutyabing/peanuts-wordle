@@ -1,4 +1,3 @@
-activateKeyboard();
 var correctAnswer = "";
 var randomAnswer = getRandomWord();
 var todaysFixedAnswer = getTodaysWord();
@@ -26,8 +25,8 @@ function submitAnswer(input) {
 
     // Render coloured cells
     var currentRowNumber = guessedWords.length;
-    var currentRowId = "row-" + currentRowNumber.toString();
-    var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
+    var currentRowId = "#row-" + currentRowNumber.toString();
+    var currentRowCells = document.querySelectorAll(`${currentRowId} .cell`);
     for (let i = 0; i < currentRowCells.length; i += 1) {
       updateColour(currentRowCells[i], resultColours[i]);
     }
@@ -57,8 +56,11 @@ function submitAnswer(input) {
       }
     }
   } else {
+    var currentRowNumber = guessedWords.length;
+    var currentRowId = "#row-" + currentRowNumber.toString();
+    shakeRow(document.querySelector(currentRowId));
     setTimeout(() => {
-      alert(`${input} is not in the word list. Try something else!`);
+      alert(`Please enter a valid 5-letter word.`);
     }, 500);
   }
 }
@@ -69,7 +71,7 @@ function getTodaysWord() {
   let today = new Date();
   let timePassed = today.getTime() - startDate.getTime();
   var offset = Math.ceil(timePassed / (1000 * 3600 * 24));
-  var todaysWord = words[offset];
+  var todaysWord = words[offset % words.length];
   return todaysWord;
 }
 
@@ -112,10 +114,10 @@ function removeLastLetter() {
 function validate(guess) {
   let firstLetter = guess[0];
   if (indexedWords[firstLetter].includes(guess)) {
-    console.log(`${guess} is a word.`);
+    // console.log(`${guess} is a word.`);
     return true;
   } else {
-    console.log(`${guess} is not a valid word.`);
+    // console.log(`${guess} is not a valid word.`);
     return false;
   }
 }
@@ -139,10 +141,6 @@ function getResultColours(guess, correctAnswer) {
       keyColourMap[guess[i]] = "green";
     }
   }
-  console.log("After checking for green:");
-  console.log(resultColours);
-  console.log(answerArray);
-  console.log(keyColourMap);
 
   // Second round: check for yellow letters
   for (let i = 0; i < guess.length; i += 1) {
@@ -155,10 +153,6 @@ function getResultColours(guess, correctAnswer) {
       keyColourMap[guess[i]] = "yellow";
     }
   }
-  console.log("After checking for yellow");
-  console.log(resultColours);
-  console.log(answerArray);
-  console.log(keyColourMap);
   return resultColours;
 }
 
@@ -175,6 +169,7 @@ function getWord() {
   }
   return word;
 }
+
 // Breakdown any word into an array of letters
 function getLettersArray(anyWord) {
   return anyWord.split("");
@@ -278,4 +273,10 @@ function activateKeyboard() {
       }
     };
   }
+}
+
+// ANIMATIONS
+
+function shakeRow(row) {
+  // var row = document.querySelector(currentRowId);
 }
