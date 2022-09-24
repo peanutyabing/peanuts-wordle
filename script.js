@@ -162,8 +162,8 @@ function getResultColours(guess, correctAnswer) {
 function getWord() {
   var word = "";
   var currentRowIndex = guessedWords.length;
-  var currentRowId = "row-" + (currentRowIndex + 1).toString();
-  var currentRowCells = document.querySelectorAll(`#${currentRowId} .cell`);
+  var currentRowId = "#row-" + (currentRowIndex + 1).toString();
+  var currentRowCells = document.querySelectorAll(`${currentRowId} .cell`);
   for (let i = 0; i < currentRowCells.length; i += 1) {
     word += currentRowCells[i].innerHTML;
   }
