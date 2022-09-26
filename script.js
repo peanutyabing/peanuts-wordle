@@ -39,14 +39,12 @@ function submitAnswer(input) {
 
     // Game outcome alert messages
     if (!resultColours.includes("yellow") && !resultColours.includes("grey")) {
+      disableKeyboard();
       setTimeout(() => {
         alert(
           `Congrats! "${input}" is the correct word. Number of attempts: ${guessedWords.length}.`
         );
       }, 500);
-      if (!unlimitedMode) {
-        disableKeyboard();
-      }
     } else if (guessedWords.length >= 6) {
       setTimeout(() => {
         alert(`You ran out of tries! The answer is "${correctAnswer}".`);
