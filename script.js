@@ -27,8 +27,16 @@ function submitAnswer(input) {
     var currentRowNumber = guessedWords.length;
     var currentRowId = "#row-" + currentRowNumber.toString();
     var currentRowCells = document.querySelectorAll(`${currentRowId} .cell`);
+    var interval = 100;
     for (let i = 0; i < currentRowCells.length; i += 1) {
-      updateColour(currentRowCells[i], resultColours[i]);
+      setTimeout(() => {
+        const cellColour = colourPalette[resultColours[i]];
+        currentRowCells[i].classList.add(
+          "animate__animated",
+          "animate__flipInX"
+        );
+        currentRowCells[i].style = `background-color:${cellColour}`;
+      }, interval * i);
     }
 
     // Render coloured keyboard buttons
@@ -44,19 +52,18 @@ function submitAnswer(input) {
         alert(
           `Congrats! "${input}" is the correct word. Number of attempts: ${guessedWords.length}.`
         );
-      }, 500);
+      }, 1000);
     } else if (guessedWords.length >= 6) {
       setTimeout(() => {
         alert(`You ran out of tries! The answer is "${correctAnswer}".`);
-      }, 500);
+      }, 1000);
       if (!unlimitedMode) {
         disableKeyboard();
       }
     }
   } else {
     var currentRowNumber = guessedWords.length;
-    var currentRowId = "#row-" + currentRowNumber.toString();
-    shakeRow(document.querySelector(currentRowId));
+    // var currentRowId = "#row-" + (currentRowNumber + 1).toString();
     setTimeout(() => {
       alert(`Please enter a valid 5-letter word.`);
     }, 500);
@@ -84,9 +91,19 @@ function displayGuessedWord(letter) {
   const cells = document.querySelectorAll(".cell");
   var currentCell = cells[cellCounter];
   currentCell.innerHTML = letter;
+  animateElementExpand(currentCell);
   if (currentCell.id != 5) {
     cellCounter += 1;
   }
+}
+
+function animateElementExpand(element) {
+  const cellExpand = [{ transform: "scale(0.9)" }, { transform: "scale(1.1)" }];
+  const expandTiming = {
+    duration: 100,
+    iterations: 1,
+  };
+  element.animate(cellExpand, expandTiming);
 }
 
 function removeLastLetter() {
@@ -111,7 +128,9 @@ function removeLastLetter() {
 // Check if player's guess is in the word bank
 function validate(guess) {
   let firstLetter = guess[0];
-  if (indexedWords[firstLetter].includes(guess)) {
+  if (guess == "") {
+    return false;
+  } else if (indexedWords[firstLetter].includes(guess)) {
     // console.log(`${guess} is a word.`);
     return true;
   } else {
@@ -156,7 +175,7 @@ function getResultColours(guess, correctAnswer) {
 
 // HELPER FUNCTIONS
 
-// Convert letters in each row in the grid into a string
+// Retrieve the word from each row as a string
 function getWord() {
   var word = "";
   var currentRowIndex = guessedWords.length;
@@ -168,14 +187,9 @@ function getWord() {
   return word;
 }
 
-// Breakdown any word into an array of letters
+// Breakdown any string into an array of individual letters
 function getLettersArray(anyWord) {
   return anyWord.split("");
-}
-
-function countOccurence(value, array) {
-  var occurence = array.filter((item) => item == value).length;
-  return occurence;
 }
 
 function updateColour(element, colour) {
@@ -271,10 +285,4 @@ function activateKeyboard() {
       }
     };
   }
-}
-
-// ANIMATIONS
-
-function shakeRow(row) {
-  // var row = document.querySelector(currentRowId);
 }
