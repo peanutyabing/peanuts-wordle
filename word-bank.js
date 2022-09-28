@@ -1,4 +1,4 @@
-// Pre-scrambled array of five-letter words
+// Pre-scrambled array of five-letter words created with Regex search ^(.*)$ and replace with "$1",
 const words = [
   "which",
   "there",

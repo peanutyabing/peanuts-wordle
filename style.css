@@ -86,7 +86,7 @@ body {
 .checkbox .checkmark:after {
   left: 8px;
   top: 2px;
-  width: 2px;
+  width: 3px;
   height: 10px;
   border: solid white;
   border-width: 0 3px 3px 0;

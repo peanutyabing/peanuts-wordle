@@ -1,3 +1,4 @@
+// STARTING STATE
 var correctAnswer = "";
 var randomAnswer = getRandomWord();
 var todaysFixedAnswer = getTodaysWord();
@@ -11,6 +12,7 @@ var keyColourMap = generatekeyColourMap();
 var cellCounter = 0; // Keeps track of where the next letter goes in the grid
 let unlimitedMode = false;
 
+// GAME LOGIC
 function submitAnswer(input) {
   if (unlimitedMode) {
     correctAnswer = randomAnswer;
@@ -70,6 +72,22 @@ function submitAnswer(input) {
   }
 }
 
+// HELPER FUNCTIONS
+
+// Check if player's guess is in the word bank
+function validate(guess) {
+  let firstLetter = guess[0];
+  if (guess == "") {
+    return false;
+  } else if (indexedWords[firstLetter].includes(guess)) {
+    // console.log(`${guess} is a word.`);
+    return true;
+  } else {
+    // console.log(`${guess} is not a valid word.`);
+    return false;
+  }
+}
+
 // Generate today's word
 function getTodaysWord() {
   let startDate = new Date("09/10/2022");
@@ -87,6 +105,7 @@ function getRandomWord() {
   return randomWord;
 }
 
+// When user types...
 function displayGuessedWord(letter) {
   const cells = document.querySelectorAll(".cell");
   var currentCell = cells[cellCounter];
@@ -97,15 +116,7 @@ function displayGuessedWord(letter) {
   }
 }
 
-function animateElementExpand(element) {
-  const cellExpand = [{ transform: "scale(0.9)" }, { transform: "scale(1.1)" }];
-  const expandTiming = {
-    duration: 100,
-    iterations: 1,
-  };
-  element.animate(cellExpand, expandTiming);
-}
-
+// When user presses backspace...
 function removeLastLetter() {
   const cells = document.querySelectorAll(".cell");
   var currentCell = cells[cellCounter];
@@ -125,25 +136,11 @@ function removeLastLetter() {
   }
 }
 
-// Check if player's guess is in the word bank
-function validate(guess) {
-  let firstLetter = guess[0];
-  if (guess == "") {
-    return false;
-  } else if (indexedWords[firstLetter].includes(guess)) {
-    // console.log(`${guess} is a word.`);
-    return true;
-  } else {
-    // console.log(`${guess} is not a valid word.`);
-    return false;
-  }
-}
-
 // Generate an array for the colour at each position
 function getResultColours(guess, correctAnswer) {
   var answerArray = getLettersArray(correctAnswer);
 
-  // Starting state to be updated
+  // Default colour is grey, to be updated
   var resultColours = Array(5).fill("grey");
   for (let i = 0; i < guess.length; i += 1) {
     keyColourMap[guess[i]] = "grey";
@@ -153,7 +150,6 @@ function getResultColours(guess, correctAnswer) {
   for (let i = 0; i < guess.length; i += 1) {
     if (guess[i] == correctAnswer[i]) {
       resultColours[i] = "green";
-      // greenLetters.push(guess[i]);
       answerArray[i] = null;
       keyColourMap[guess[i]] = "green";
     }
@@ -172,8 +168,6 @@ function getResultColours(guess, correctAnswer) {
   }
   return resultColours;
 }
-
-// HELPER FUNCTIONS
 
 // Retrieve the word from each row as a string
 function getWord() {
@@ -251,8 +245,8 @@ function disableKeyboard() {
   var keys = document.querySelectorAll("#key");
   for (let i = 0; i < keys.length; i += 1) {
     keys[i].onclick = () => {};
-  } // Disable on-screen keyboard after game ends
-  document.onkeyup = function () {}; // Disable physical keyboard after game ends
+  } // Disable on-screen keyboard after round ends
+  document.onkeyup = function () {}; // Disable physical keyboard after round ends
 }
 
 function activateKeyboard() {
@@ -261,7 +255,6 @@ function activateKeyboard() {
   for (let i = 0; i < keys.length; i += 1) {
     keys[i].onclick = (event) => {
       const letter = event.target.getAttribute("data-key");
-      // console.log(letter);
       if (letter == "delete") {
         removeLastLetter();
       } else if (letter == "return") {
@@ -284,5 +277,21 @@ function activateKeyboard() {
         displayGuessedWord(keyPressed.toLowerCase());
       }
     };
+  }
+}
+
+function animateElementExpand(element) {
+  const cellExpand = [{ transform: "scale(0.9)" }, { transform: "scale(1.1)" }];
+  const expandTiming = {
+    duration: 100,
+    iterations: 1,
+  };
+  element.animate(cellExpand, expandTiming);
+}
+
+function removeFlipCellsAnimation() {
+  var cells = document.querySelectorAll(".cell");
+  for (let i = 0; i < cells.length; i += 1) {
+    cells[i].classList.remove("animate__animated", "animate__flipInX");
   }
 }
