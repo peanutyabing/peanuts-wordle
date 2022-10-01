@@ -1,3 +1,5 @@
+const cookieNames = ["1", "2", "3", "4", "5", "6", "Played", "Won"];
+
 // STARTING STATE
 var correctAnswer = "";
 var randomAnswer = getRandomWord();
@@ -47,8 +49,18 @@ function submitAnswer(input) {
       updateColour(key, keyColourMap[input[i]]);
     }
 
-    // Game outcome alert messages
+    // Tally game outcome
     if (!resultColours.includes("yellow") && !resultColours.includes("grey")) {
+      var cookiesToUpdate = [`${guessedWords.length}`, "Played", "Won"];
+      for (i = 0; i < cookiesToUpdate.length; i += 1) {
+        var value = getCookie(cookiesToUpdate[i]);
+        if (value.length == 0) {
+          value = "1";
+        } else {
+          value = (parseInt(value) + 1).toString();
+        }
+        setCookie(cookiesToUpdate[i], value, 365);
+      }
       disableKeyboard();
       setTimeout(() => {
         alert(
@@ -56,6 +68,13 @@ function submitAnswer(input) {
         );
       }, 1000);
     } else if (guessedWords.length >= 6) {
+      var value = getCookie("Played");
+      if (value.length == 0) {
+        value = "1";
+      } else {
+        value = (parseInt(value) + 1).toString();
+      }
+      setCookie("Played", value, 365);
       setTimeout(() => {
         alert(`You ran out of tries! The answer is "${correctAnswer}".`);
       }, 1000);
@@ -64,8 +83,6 @@ function submitAnswer(input) {
       }
     }
   } else {
-    var currentRowNumber = guessedWords.length;
-    // var currentRowId = "#row-" + (currentRowNumber + 1).toString();
     setTimeout(() => {
       alert(`Please enter a valid 5-letter word.`);
     }, 500);
@@ -294,4 +311,28 @@ function removeFlipCellsAnimation() {
   for (let i = 0; i < cells.length; i += 1) {
     cells[i].classList.remove("animate__animated", "animate__flipInX");
   }
+}
+
+// COOKIES
+
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = `${cname}=${cvalue}; ${expires}; path=/`;
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
 }
