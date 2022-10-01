@@ -67,6 +67,9 @@ function submitAnswer(input) {
           `Congrats! "${input}" is the correct word. Number of attempts: ${guessedWords.length}.`
         );
       }, 1000);
+      setTimeout(() => {
+        updateScores();
+      }, 3000);
     } else if (guessedWords.length >= 6) {
       var value = getCookie("Played");
       if (value.length == 0) {
@@ -78,6 +81,9 @@ function submitAnswer(input) {
       setTimeout(() => {
         alert(`You ran out of tries! The answer is "${correctAnswer}".`);
       }, 1000);
+      setTimeout(() => {
+        updateScores();
+      }, 3000);
       if (!unlimitedMode) {
         disableKeyboard();
       }
@@ -241,6 +247,20 @@ function generatekeyColourMap() {
     keyColourMap[alphabet[i]] = "";
   }
   return keyColourMap;
+}
+
+function updateScores() {
+  scores = "";
+  for (i = 0; i < cookieNames.length; i += 1) {
+    var cookieValue = getCookie(cookieNames[i]);
+    scores += `${cookieNames[i]}: ${cookieValue}<br>`;
+  }
+  scores += `Win rate: ${parseInt(
+    (getCookie("Won") / getCookie("Played")) * 100
+  )}%`;
+  var scoreField = document.querySelector("#scores");
+  scoreField.innerHTML = scores;
+  modalScores.style.display = "block";
 }
 
 function resetGrid() {

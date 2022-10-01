@@ -159,6 +159,14 @@
       </div>
     </div>
 
+    <div id="score-board" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h4>SCOREBOARD</h4>
+        <p id="scores"></p>
+      </div>
+    </div>
+
     <script src="word-bank.js"></script>
     <script src="script.js"></script>
     <script>
@@ -183,23 +191,38 @@
       });
 
       // Modal - game rules
-      var modal = document.querySelector("#wordle-rules");
+      var modalRules = document.querySelector("#wordle-rules");
       // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
-      // When the user clicks the button, open the modal
+      var rulesSpan = document.getElementsByClassName("close")[0];
+      // When the page loads, open the modal
       window.onload = function () {
-        modal.style.display = "block";
+        modalRules.style.display = "block";
       };
       // When the user clicks on <span> (x), close the modal
-      span.onclick = function () {
-        modal.style.display = "none";
+      rulesSpan.onclick = function () {
+        modalRules.style.display = "none";
         activateKeyboard();
       };
       // When the user clicks anywhere outside of the modal, close it
       window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
+        if (event.target == modalRules) {
+          modalRules.style.display = "none";
           activateKeyboard();
+        }
+      };
+
+      // Modal - scoreboard
+      var modalScores = document.querySelector("#score-board");
+      // Get the <span> element that closes the modal
+      var scoresSpan = document.getElementsByClassName("close")[1];
+      // When the user clicks on <span> (x), close the modal
+      scoresSpan.onclick = function () {
+        modalScores.style.display = "none";
+      };
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modalScores) {
+          modalScores.style.display = "none";
         }
       };
     </script>
