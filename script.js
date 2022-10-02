@@ -1,4 +1,4 @@
-const cookieNames = ["1", "2", "3", "4", "5", "6", "Played", "Won"];
+const cookieNames = ["Played", "Won", "1", "2", "3", "4", "5", "6"];
 
 // STARTING STATE
 var correctAnswer = "";
@@ -69,7 +69,8 @@ function submitAnswer(input) {
       }, 1000);
       setTimeout(() => {
         updateScores();
-      }, 3000);
+      }, 1000);
+      highlightLastTry();
     } else if (guessedWords.length >= 6) {
       var value = getCookie("Played");
       if (value.length == 0) {
@@ -83,7 +84,7 @@ function submitAnswer(input) {
       }, 1000);
       setTimeout(() => {
         updateScores();
-      }, 3000);
+      }, 1000);
       if (!unlimitedMode) {
         disableKeyboard();
       }
@@ -250,17 +251,51 @@ function generatekeyColourMap() {
 }
 
 function updateScores() {
-  scores = "";
-  for (i = 0; i < cookieNames.length; i += 1) {
-    var cookieValue = getCookie(cookieNames[i]);
-    scores += `${cookieNames[i]}: ${cookieValue}<br>`;
-  }
-  scores += `Win rate: ${parseInt(
+  var playedField = document.querySelector("#played");
+  var wonField = document.querySelector("#won");
+  var winRateField = document.querySelector("#win-rate");
+  var numberOfTriesFields = document.querySelectorAll(".tries");
+
+  playedField.innerHTML = `Played<br>${getCookie("Played")}`;
+  wonField.innerHTML = `Won<br>${getCookie("Won")}`;
+  winRateField.innerHTML = `Win rate<br>${parseInt(
     (getCookie("Won") / getCookie("Played")) * 100
   )}%`;
-  var scoreField = document.querySelector("#scores");
-  scoreField.innerHTML = scores;
+
+  var triesStats = [];
+  for (i = 0; i < numberOfTriesFields.length; i += 1) {
+    triesStats.push(getCookie(i + 1));
+  }
+
+  var highestStat = Math.max(...triesStats);
+  for (i = 0; i < numberOfTriesFields.length; i += 1) {
+    numberOfTriesFields[i].style.width = `${
+      (triesStats[i] / highestStat) * 94
+    }%`;
+    if (triesStats[i] != 0) {
+      numberOfTriesFields[i].innerHTML = `${triesStats[i]}`;
+    }
+  }
+  // Make the scoreboard modal appear (hidden by default)
   modalScores.style.display = "block";
+}
+
+function highlightLastTry() {
+  var numberOfTriesFields = document.querySelectorAll(".tries");
+
+  for (i = 0; i < numberOfTriesFields.length; i += 1) {
+    if (i + 1 == guessedWords.length) {
+      numberOfTriesFields[i].style.backgroundColor = "#428365";
+      numberOfTriesFields[i].style.color = "#ffffff";
+    }
+  }
+}
+
+function removeScoreboardInlineStyle() {
+  var numberOfTriesFields = document.querySelectorAll(".tries");
+  for (i = 0; i < numberOfTriesFields.length; i += 1) {
+    numberOfTriesFields[i].removeAttribute("style");
+  }
 }
 
 function resetGrid() {

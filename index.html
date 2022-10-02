@@ -162,8 +162,33 @@
     <div id="score-board" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <h4>SCOREBOARD</h4>
-        <p id="scores"></p>
+        <h4>OVERALL STATS</h4>
+        <div id="overall-stats">
+          <div class="overall-stats-field" id="played"></div>
+          <div class="overall-stats-field" id="won"></div>
+          <div class="overall-stats-field" id="win-rate"></div>
+        </div>
+        <h4>DISTRIBUTION</h4>
+        <div id="tries-stats">
+          <div class="break"></div>
+          <div>1</div>
+          <div class="tries" id="1-try"></div>
+          <div class="break"></div>
+          <div>2</div>
+          <div class="tries" id="2-tries"></div>
+          <div class="break"></div>
+          <div>3</div>
+          <div class="tries" id="3-tries"></div>
+          <div class="break"></div>
+          <div>4</div>
+          <div class="tries" id="4-tries"></div>
+          <div class="break"></div>
+          <div>5</div>
+          <div class="tries" id="5-tries"></div>
+          <div class="break"></div>
+          <div>6</div>
+          <div class="tries" id="6-tries"></div>
+        </div>
       </div>
     </div>
 
@@ -180,6 +205,7 @@
       var playAgainButton = document.querySelector("#play-again");
       playAgainButton.addEventListener("click", () => {
         if (unlimitedMode) {
+          removeScoreboardInlineStyle();
           resetGrid();
           resetKeyboard();
           activateKeyboard();
@@ -194,21 +220,18 @@
       var modalRules = document.querySelector("#wordle-rules");
       // Get the <span> element that closes the modal
       var rulesSpan = document.getElementsByClassName("close")[0];
-      // When the page loads, open the modal
-      window.onload = function () {
-        modalRules.style.display = "block";
-      };
+      // When the page loads the first time, open the modal
+      if (document.cookie.length == 0) {
+        window.onload = function () {
+          modalRules.style.display = "block";
+        };
+      } else {
+        activateKeyboard();
+      }
       // When the user clicks on <span> (x), close the modal
       rulesSpan.onclick = function () {
         modalRules.style.display = "none";
         activateKeyboard();
-      };
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-        if (event.target == modalRules) {
-          modalRules.style.display = "none";
-          activateKeyboard();
-        }
       };
 
       // Modal - scoreboard
@@ -219,9 +242,13 @@
       scoresSpan.onclick = function () {
         modalScores.style.display = "none";
       };
-      // When the user clicks anywhere outside of the modal, close it
+
+      // When the user clicks anywhere outside of the modals, modals close
       window.onclick = function (event) {
-        if (event.target == modalScores) {
+        if (event.target == modalRules) {
+          modalRules.style.display = "none";
+          activateKeyboard();
+        } else if (event.target == modalScores) {
           modalScores.style.display = "none";
         }
       };
