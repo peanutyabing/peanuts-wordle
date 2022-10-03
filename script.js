@@ -1,9 +1,10 @@
 const cookieNames = ["Played", "Won", "1", "2", "3", "4", "5", "6"];
 
 // STARTING STATE
-var correctAnswer = "";
+let unlimitedMode = false;
 var randomAnswer = getRandomWord();
 var todaysFixedAnswer = getTodaysWord();
+var correctAnswer = "";
 const guessedWords = [];
 const colourPalette = {
   green: "#96ceb4",
@@ -12,20 +13,15 @@ const colourPalette = {
 };
 var keyColourMap = generatekeyColourMap();
 var cellCounter = 0; // Keeps track of where the next letter goes in the grid
-let unlimitedMode = false;
 
 // GAME LOGIC
-function submitAnswer(input) {
-  if (unlimitedMode) {
-    correctAnswer = randomAnswer;
-  } else {
-    correctAnswer = todaysFixedAnswer;
-  }
+function displayResults(guess) {
+  correctAnswer = getCorrectAnswer();
 
-  if (validate(input)) {
-    var resultColours = getResultColours(input, correctAnswer);
+  if (validate(guess)) {
+    var resultColours = getResultColours(guess, correctAnswer);
     cellCounter += 1; // Go to firs cell in next row
-    guessedWords.push(input);
+    guessedWords.push(guess);
 
     // Render coloured cells
     var currentRowNumber = guessedWords.length;
@@ -44,55 +40,57 @@ function submitAnswer(input) {
     }
 
     // Render coloured keyboard buttons
-    for (let i = 0; i < input.length; i += 1) {
-      var key = document.querySelector(`[data-key="${input[i]}"]`);
-      updateColour(key, keyColourMap[input[i]]);
-    }
-
-    // Tally game outcome
-    if (!resultColours.includes("yellow") && !resultColours.includes("grey")) {
-      var cookiesToUpdate = [`${guessedWords.length}`, "Played", "Won"];
-      for (i = 0; i < cookiesToUpdate.length; i += 1) {
-        var value = getCookie(cookiesToUpdate[i]);
-        if (value.length == 0) {
-          value = "1";
-        } else {
-          value = (parseInt(value) + 1).toString();
-        }
-        setCookie(cookiesToUpdate[i], value, 365);
-      }
-      disableKeyboard();
-      setTimeout(() => {
-        alert(
-          `Congrats! "${input}" is the correct word. Number of attempts: ${guessedWords.length}.`
-        );
-      }, 1000);
-      setTimeout(() => {
-        updateScores();
-      }, 1000);
-      highlightLastTry();
-    } else if (guessedWords.length >= 6) {
-      var value = getCookie("Played");
-      if (value.length == 0) {
-        value = "1";
-      } else {
-        value = (parseInt(value) + 1).toString();
-      }
-      setCookie("Played", value, 365);
-      setTimeout(() => {
-        alert(`You ran out of tries! The answer is "${correctAnswer}".`);
-      }, 1000);
-      setTimeout(() => {
-        updateScores();
-      }, 1000);
-      if (!unlimitedMode) {
-        disableKeyboard();
-      }
+    for (let i = 0; i < guess.length; i += 1) {
+      var key = document.querySelector(`[data-key="${guess[i]}"]`);
+      updateColour(key, keyColourMap[guess[i]]);
     }
   } else {
     setTimeout(() => {
       alert(`Please enter a valid 5-letter word.`);
     }, 500);
+  }
+}
+
+function tallyResults(guess) {
+  var resultColours = getResultColours(guess, correctAnswer);
+  if (!resultColours.includes("yellow") && !resultColours.includes("grey")) {
+    var resultCookies = [`${guessedWords.length}`, "Played", "Won"];
+    for (i = 0; i < resultCookies.length; i += 1) {
+      var cookieValue = getCookie(resultCookies[i]);
+      if (cookieValue.length == 0) {
+        cookieValue = "1";
+      } else {
+        cookieValue = (parseInt(cookieValue) + 1).toString();
+      }
+      setCookie(resultCookies[i], cookieValue, getExpiryDate(365));
+    }
+    disableKeyboard();
+    setTimeout(() => {
+      alert(
+        `Congrats! "${guess}" is the correct word. Number of attempts: ${guessedWords.length}.`
+      );
+    }, 1000);
+    setTimeout(() => {
+      updateScores();
+    }, 1000);
+    highlightLastTry();
+    saveTodaysGuesses(guessedWords);
+  } else if (guessedWords.length >= 6) {
+    var cookieValue = getCookie("Played");
+    if (cookieValue.length == 0) {
+      cookieValue = "1";
+    } else {
+      cookieValue = (parseInt(cookieValue) + 1).toString();
+    }
+    setCookie("Played", cookieValue, getExpiryDate(365));
+    disableKeyboard();
+    setTimeout(() => {
+      alert(`You ran out of tries! The answer is "${correctAnswer}".`);
+    }, 1000);
+    setTimeout(() => {
+      updateScores();
+    }, 1000);
+    saveTodaysGuesses(guessedWords);
   }
 }
 
@@ -127,6 +125,15 @@ function getRandomWord() {
   var randomIndex = Math.floor(Math.random() * words.length);
   var randomWord = words[randomIndex];
   return randomWord;
+}
+
+function getCorrectAnswer() {
+  if (unlimitedMode) {
+    correctAnswer = randomAnswer;
+  } else {
+    correctAnswer = todaysFixedAnswer;
+  }
+  return correctAnswer;
 }
 
 // When user types...
@@ -331,7 +338,8 @@ function activateKeyboard() {
         removeLastLetter();
       } else if (letter == "return") {
         var currentGuess = getWord();
-        submitAnswer(currentGuess);
+        displayResults(currentGuess);
+        tallyResults(currentGuess);
       } else {
         displayGuessedWord(letter);
       }
@@ -344,7 +352,8 @@ function activateKeyboard() {
         removeLastLetter();
       } else if (keyPressed == "Enter") {
         var currentGuess = getWord();
-        submitAnswer(currentGuess);
+        displayResults(currentGuess);
+        tallyResults(currentGuess);
       } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
         displayGuessedWord(keyPressed.toLowerCase());
       }
@@ -370,15 +379,19 @@ function removeFlipCellsAnimation() {
 
 // COOKIES
 
-function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  document.cookie = `${cname}=${cvalue}; ${expires}; path=/`;
+function setCookie(cName, cValue, cExpiry) {
+  document.cookie = `${cName}=${cValue}; expires=${cExpiry}; path=/`;
 }
 
-function getCookie(cname) {
-  let name = cname + "=";
+function getExpiryDate(daysFromToday) {
+  const d = new Date(); // date and time right now
+  d.setTime(d.getTime() + daysFromToday * 24 * 60 * 60 * 1000);
+  let expiry = d.toUTCString();
+  return expiry;
+}
+
+function getCookie(cName) {
+  let name = cName + "=";
   let ca = document.cookie.split(";");
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
@@ -390,4 +403,34 @@ function getCookie(cname) {
     }
   }
   return "";
+}
+
+function saveTodaysGuesses(guesses) {
+  if (!unlimitedMode) {
+    // Today's guesses expire at 0000hrs the next day
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.toUTCString();
+    // guesses = the array of all words guessed today
+    // e.g. ["route", "weary", "every"]
+    for (i = 0; i < guesses.length; i += 1) {
+      setCookie(`todays-guess-${i + 1}`, guesses[i], tomorrow);
+    }
+    console.log(document.cookie);
+  }
+}
+
+function displayTodaysGuesses() {
+  var todaysGuesses = [];
+  for (i = 0; i < 6; i += 1) {
+    var guess = getCookie(`todays-guess-${i + 1}`);
+    if (guess.length > 0) {
+      todaysGuesses.push(guess);
+      for (j = 0; j < 5; j += 1) {
+        displayGuessedWord(guess[j]);
+      }
+      displayResults(todaysGuesses[i]); //// need to breakdown submitAnswer into reveal results and actually playing/updating scoreboard
+    }
+  }
 }

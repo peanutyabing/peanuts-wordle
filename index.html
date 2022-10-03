@@ -216,6 +216,11 @@
         }
       });
 
+      // Display today's guesses, if the player has already played
+      if (getCookie("todays-guess-1").length > 0) {
+        displayTodaysGuesses();
+      }
+
       // Modal - game rules
       var modalRules = document.querySelector("#wordle-rules");
       // Get the <span> element that closes the modal
