@@ -23,6 +23,9 @@ body {
 .game-modes {
   padding-top: 5px;
   padding-bottom: 5px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 /* Customised checkbox container */
@@ -31,7 +34,7 @@ body {
   font-size: 12pt;
   display: inline-block;
   position: relative;
-  padding-left: 35px;
+  padding-left: 25px;
   margin-left: 2px;
   cursor: pointer;
   -webkit-user-select: none;
@@ -67,7 +70,7 @@ body {
 
 /* When the checkbox is checked, add a blue background */
 .checkbox input:checked ~ .checkmark {
-  background-color: lightseagreen;
+  background-color: #10559a;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -95,25 +98,40 @@ body {
   transform: rotate(45deg);
 }
 
-#play-again {
-  background-color: #ccc;
-  border: 1px solid #ccc;
-  padding: 6px 16px 6px 16px;
+#feeling-lazy {
+  background-color: #e9cce1;
+  padding: 6px 6px 6px 6px;
   text-align: center;
   font-family: "Roboto", sans-serif;
   font-size: 12pt;
   text-decoration: none;
   display: inline-block;
-  margin: 0 0 0 100px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 5%;
+}
+
+#feeling-lazy:hover {
+  background-color: #db4c77;
+  color: white;
+}
+
+#play-again {
+  background-color: #88c4e4;
+  padding: 6px 6px 6px 6px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 12pt;
+  text-decoration: none;
+  display: inline-block;
   transition-duration: 0.4s;
   cursor: pointer;
   border-radius: 5%;
 }
 
 #play-again:hover {
-  background-color: #888888;
-  color: black;
-  border: 1px solid #ccc;
+  background-color: #10559a;
+  color: white;
 }
 
 .grid-row {

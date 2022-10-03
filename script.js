@@ -1,6 +1,7 @@
 const cookieNames = ["Played", "Won", "1", "2", "3", "4", "5", "6"];
 
 // STARTING STATE
+let gameState = "playing";
 let unlimitedMode = false;
 var randomAnswer = getRandomWord();
 var todaysFixedAnswer = getTodaysWord();
@@ -64,7 +65,7 @@ function tallyResults(guess) {
       }
       setCookie(resultCookies[i], cookieValue, getExpiryDate(365));
     }
-    disableKeyboard();
+    gameState = "over";
     setTimeout(() => {
       alert(
         `Congrats! "${guess}" is the correct word. Number of attempts: ${guessedWords.length}.`
@@ -83,7 +84,7 @@ function tallyResults(guess) {
       cookieValue = (parseInt(cookieValue) + 1).toString();
     }
     setCookie("Played", cookieValue, getExpiryDate(365));
-    disableKeyboard();
+    gameState = "over";
     setTimeout(() => {
       alert(`You ran out of tries! The answer is "${correctAnswer}".`);
     }, 1000);
@@ -137,7 +138,7 @@ function getCorrectAnswer() {
 }
 
 // When user types...
-function displayGuessedWord(letter) {
+function displayLetter(letter) {
   const cells = document.querySelectorAll(".cell");
   var currentCell = cells[cellCounter];
   currentCell.innerHTML = letter;
@@ -320,46 +321,14 @@ function resetKeyboard() {
   }
 }
 
-function disableKeyboard() {
-  var keys = document.querySelectorAll("#key");
-  for (let i = 0; i < keys.length; i += 1) {
-    keys[i].onclick = () => {};
-  } // Disable on-screen keyboard after round ends
-  document.onkeyup = function () {}; // Disable physical keyboard after round ends
-}
-
-function activateKeyboard() {
-  // Enable on-screen keyboard actions: key in letters, delete, return
-  const keys = document.querySelectorAll("#key");
-  for (let i = 0; i < keys.length; i += 1) {
-    keys[i].onclick = (event) => {
-      const letter = event.target.getAttribute("data-key");
-      if (letter == "delete") {
-        removeLastLetter();
-      } else if (letter == "return") {
-        var currentGuess = getWord();
-        displayResults(currentGuess);
-        tallyResults(currentGuess);
-      } else {
-        displayGuessedWord(letter);
-      }
-    };
-
-    // Computer keyboard actions with input validation
-    document.onkeyup = (event) => {
-      const keyPressed = event.key;
-      if (keyPressed == "Backspace") {
-        removeLastLetter();
-      } else if (keyPressed == "Enter") {
-        var currentGuess = getWord();
-        displayResults(currentGuess);
-        tallyResults(currentGuess);
-      } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
-        displayGuessedWord(keyPressed.toLowerCase());
-      }
-    };
-  }
-}
+// function disableKeyboard() {
+//   var keys = document.querySelectorAll("#key");
+//   for (let i = 0; i < keys.length; i += 1) {
+//     keys[i].onclick = () => {};
+//   } // Disable on-screen keyboard after round ends
+//   document.onkeyup = function () {}; // Disable physical keyboard after round ends
+//   feelingLazyButton.disabled = true;
+// }
 
 function animateElementExpand(element) {
   const cellExpand = [{ transform: "scale(0.9)" }, { transform: "scale(1.1)" }];
@@ -413,7 +382,6 @@ function saveTodaysGuesses(guesses) {
     tomorrow.setHours(0, 0, 0, 0);
     tomorrow.toUTCString();
     // guesses = the array of all words guessed today
-    // e.g. ["route", "weary", "every"]
     for (i = 0; i < guesses.length; i += 1) {
       setCookie(`todays-guess-${i + 1}`, guesses[i], tomorrow);
     }
@@ -422,15 +390,16 @@ function saveTodaysGuesses(guesses) {
 }
 
 function displayTodaysGuesses() {
+  gameState = "over";
   var todaysGuesses = [];
   for (i = 0; i < 6; i += 1) {
     var guess = getCookie(`todays-guess-${i + 1}`);
     if (guess.length > 0) {
       todaysGuesses.push(guess);
       for (j = 0; j < 5; j += 1) {
-        displayGuessedWord(guess[j]);
+        displayLetter(guess[j]);
       }
-      displayResults(todaysGuesses[i]); //// need to breakdown submitAnswer into reveal results and actually playing/updating scoreboard
+      displayResults(todaysGuesses[i]);
     }
   }
 }

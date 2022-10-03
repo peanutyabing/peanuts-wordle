@@ -69,11 +69,14 @@
     <div class="container">
       <h1 id="header">Wordle</h1>
       <div class="game-modes">
-        <label class="checkbox"
-          >Unlimited
-          <input type="checkbox" id="unlimited" />
-          <span class="checkmark"></span>
-        </label>
+        <div>
+          <label class="checkbox"
+            >Unlimited
+            <input type="checkbox" id="unlimited" />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div id="feeling-lazy">Feelin' lazy</div>
         <div id="play-again">Play again</div>
       </div>
       <div id="grid">
@@ -195,10 +198,71 @@
     <script src="word-bank.js"></script>
     <script src="script.js"></script>
     <script>
+      // Enable on-screen keyboard actions: key in letters, delete, return
+      const keys = document.querySelectorAll("#key");
+      for (let i = 0; i < keys.length; i += 1) {
+        keys[i].onclick = (event) => {
+          if (gameState == "over") {
+            return;
+          }
+          const letter = event.target.getAttribute("data-key");
+          if (letter == "delete") {
+            removeLastLetter();
+          } else if (letter == "return") {
+            var currentGuess = getWord();
+            displayResults(currentGuess);
+            tallyResults(currentGuess);
+          } else {
+            displayLetter(letter);
+          }
+        };
+
+        // Computer keyboard actions with input validation
+        document.onkeyup = (event) => {
+          if (gameState == "over") {
+            return;
+          }
+          const keyPressed = event.key;
+          if (keyPressed == "Backspace") {
+            removeLastLetter();
+          } else if (keyPressed == "Enter") {
+            var currentGuess = getWord();
+            displayResults(currentGuess);
+            tallyResults(currentGuess);
+          } else if (keyPressed.length == 1 && keyPressed.match(/[a-z]/i)) {
+            displayLetter(keyPressed.toLowerCase());
+          }
+        };
+      }
+
+      // Display today's guesses, if the player has already played
+      if (getCookie("todays-guess-1").length > 0) {
+        displayTodaysGuesses();
+      }
+
       // Change between normal and unlimited mode
       var unlimitedButton = document.querySelector("#unlimited");
       unlimitedButton.addEventListener("click", () => {
         unlimitedMode = unlimitedButton.checked;
+      });
+
+      // Automatically insert guess if user clicks "feeling lazy"
+      var feelingLazyButton = document.querySelector("#feeling-lazy");
+      feelingLazyButton.addEventListener("click", () => {
+        if (gameState == "over") {
+          return;
+        }
+        var nextRowNumber = guessedWords.length + 1;
+        var nextRowId = "#row-" + nextRowNumber.toString();
+        var nextRowCells = document.querySelectorAll(`${nextRowId} .cell`);
+        for (i = 0; i < nextRowCells.length; i += 1) {
+          nextRowCells[i].innerHTML = "";
+        }
+        cellCounter = cellCounter - (cellCounter % 5);
+        var randomGuess = getRandomWord();
+        for (i = 0; i < randomGuess.length; i += 1) {
+          displayLetter(randomGuess[i]);
+        }
       });
 
       // Play a new round on unlimited mode
@@ -208,18 +272,13 @@
           removeScoreboardInlineStyle();
           resetGrid();
           resetKeyboard();
-          activateKeyboard();
+          gameState = "playing";
           removeFlipCellsAnimation();
           guessedWords.splice(0, guessedWords.length);
           cellCounter = 0;
           randomAnswer = getRandomWord();
         }
       });
-
-      // Display today's guesses, if the player has already played
-      if (getCookie("todays-guess-1").length > 0) {
-        displayTodaysGuesses();
-      }
 
       // Modal - game rules
       var modalRules = document.querySelector("#wordle-rules");
@@ -230,13 +289,12 @@
         window.onload = function () {
           modalRules.style.display = "block";
         };
-      } else {
-        activateKeyboard();
       }
+
       // When the user clicks on <span> (x), close the modal
       rulesSpan.onclick = function () {
         modalRules.style.display = "none";
-        activateKeyboard();
+        gameState = "playing";
       };
 
       // Modal - scoreboard
@@ -252,7 +310,7 @@
       window.onclick = function (event) {
         if (event.target == modalRules) {
           modalRules.style.display = "none";
-          activateKeyboard();
+          gameState = "playing";
         } else if (event.target == modalScores) {
           modalScores.style.display = "none";
         }
