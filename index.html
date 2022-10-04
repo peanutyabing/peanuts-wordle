@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Peanut's Wordle</title>
+    <title>Peanut's W∞rdle</title>
 
     <!-- Mobile friendly -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Roboto:wght@500&family=Satisfy&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Gemunu+Libre:wght@600&family=Roboto:wght@500&family=Satisfy&display=swap"
       rel="stylesheet"
     />
 
@@ -67,17 +67,21 @@
       </div>
     </div>
     <div class="container">
-      <h1 id="header">Wordle</h1>
-      <div class="game-modes">
+      <div id="header">
+        <div><h1 id="title">W∞rdle</h1></div>
+        <div><p id="author">by Peanut</p></div>
+      </div>
+      <div class="game-buttons">
         <div>
           <label class="checkbox"
-            >Unlimited
+            >♾️
             <input type="checkbox" id="unlimited" />
             <span class="checkmark"></span>
           </label>
         </div>
-        <div id="feeling-lazy">Feelin' lazy</div>
         <div id="play-again">Play again</div>
+        <div id="feeling-lazy">Feelin' lazy</div>
+        <div id="show-rules">Rules</div>
       </div>
       <div id="grid">
         <div class="grid-row" id="row-1">
@@ -290,6 +294,11 @@
           modalRules.style.display = "block";
         };
       }
+
+      var showRulesButton = document.querySelector("#show-rules");
+      showRulesButton.addEventListener("click", () => {
+        modalRules.style.display = "block";
+      });
 
       // When the user clicks on <span> (x), close the modal
       rulesSpan.onclick = function () {

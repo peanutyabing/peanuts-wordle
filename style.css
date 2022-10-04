@@ -1,14 +1,29 @@
 * {
   box-sizing: border-box;
   background-color: #fdfaf2;
+  color: #28282b;
 }
 
 #header {
-  text-align: center;
-  font-family: "Satisfy", cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#title {
+  font-family: "Gemunu Libre", sans-serif;
   font-weight: bolder;
-  font-size: 36pt;
-  margin-bottom: 0;
+  font-size: 40pt;
+  margin-top: 18px;
+  margin-bottom: 6px;
+}
+
+#author {
+  font-family: "Satisfy", cursive;
+  font-weight: lighter;
+  font-size: 12pt;
+  margin-bottom: 6px;
+  padding-left: 6px;
 }
 
 body {
@@ -20,7 +35,7 @@ body {
   margin: 0 auto;
 }
 
-.game-modes {
+.game-buttons {
   padding-top: 5px;
   padding-bottom: 5px;
   display: flex;
@@ -35,7 +50,6 @@ body {
   display: inline-block;
   position: relative;
   padding-left: 25px;
-  margin-left: 2px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -99,7 +113,7 @@ body {
 }
 
 #feeling-lazy {
-  background-color: #e9cce1;
+  background-color: #ccc;
   padding: 6px 6px 6px 6px;
   text-align: center;
   font-family: "Roboto", sans-serif;
@@ -116,8 +130,25 @@ body {
   color: white;
 }
 
+#show-rules {
+  background-color: #ccc;
+  padding: 6px 6px 6px 6px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 12pt;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 5%;
+}
+
+#show-rules:hover {
+  background-color: #888888;
+}
+
 #play-again {
-  background-color: #88c4e4;
+  background-color: #ccc;
   padding: 6px 6px 6px 6px;
   text-align: center;
   font-family: "Roboto", sans-serif;
