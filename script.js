@@ -54,9 +54,7 @@ function displayResults(guess) {
       updateColour(key, keyColourMap[guess[i]]);
     }
   } else {
-    setTimeout(() => {
-      alert(`Please enter a valid 5-letter word.`);
-    }, 500);
+    showToast("Please enter a valid 5-letter word.");
   }
 }
 
@@ -76,11 +74,6 @@ function tallyResults(guess) {
     gameState = "over";
     generateResultToShare();
     setTimeout(() => {
-      alert(
-        `Congrats! "${guess}" is the correct word. Number of attempts: ${guessedWords.length}.`
-      );
-    }, 1000);
-    setTimeout(() => {
       updateScores();
     }, 1000);
     highlightLastTry();
@@ -95,12 +88,10 @@ function tallyResults(guess) {
     setCookie("Played", cookieValue, getExpiryDate(365));
     gameState = "over";
     generateResultToShare();
-    setTimeout(() => {
-      alert(`You ran out of tries! The answer is "${correctAnswer}".`);
-    }, 1000);
+    showToast(`You ran out of tries! The answer is "${correctAnswer}".`);
     setTimeout(() => {
       updateScores();
-    }, 1000);
+    }, 2000);
     saveTodaysGuesses(guessedWords);
   }
 }
@@ -113,10 +104,8 @@ function validate(guess) {
   if (guess == "") {
     return false;
   } else if (indexedWords[firstLetter].includes(guess)) {
-    // console.log(`${guess} is a word.`);
     return true;
   } else {
-    // console.log(`${guess} is not a valid word.`);
     return false;
   }
 }
@@ -331,15 +320,6 @@ function resetKeyboard() {
   }
 }
 
-// function disableKeyboard() {
-//   var keys = document.querySelectorAll("#key");
-//   for (let i = 0; i < keys.length; i += 1) {
-//     keys[i].onclick = () => {};
-//   } // Disable on-screen keyboard after round ends
-//   document.onkeyup = function () {}; // Disable physical keyboard after round ends
-//   feelingLazyButton.disabled = true;
-// }
-
 function animateElementExpand(element) {
   const cellExpand = [{ transform: "scale(0.9)" }, { transform: "scale(1.1)" }];
   const expandTiming = {
@@ -354,6 +334,56 @@ function removeFlipCellsAnimation() {
   for (let i = 0; i < cells.length; i += 1) {
     cells[i].classList.remove("animate__animated", "animate__flipInX");
   }
+}
+
+function displayTodaysGuesses() {
+  gameState = "over";
+  var todaysGuesses = [];
+  for (i = 0; i < 6; i += 1) {
+    var guess = getCookie(`todays-guess-${i + 1}`);
+    if (guess.length > 0) {
+      todaysGuesses.push(guess);
+      for (j = 0; j < 5; j += 1) {
+        displayLetter(guess[j]);
+      }
+      displayResults(todaysGuesses[i]);
+    }
+  }
+}
+
+function getTodaysDate() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, "0");
+  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  var yyyy = today.getFullYear();
+  today = `${dd}/${mm}/${yyyy}`;
+  return today;
+}
+
+function generateResultToShare() {
+  if (!unlimitedMode) {
+    resultToShare = `W∞rdle ${getTodaysDate()} ${
+      roundResultColours.length
+    }/6 \n`;
+  } else {
+    resultToShare = `W∞rdle ∞ ${roundResultColours.length}/6 \n`;
+  }
+  for (i = 0; i < roundResultColours.length; i += 1) {
+    var rowColours = roundResultColours[i];
+    for (j = 0; j < rowColours.length; j += 1) {
+      resultToShare += colourSymbols[rowColours[j]];
+    }
+    resultToShare += "\n";
+  }
+}
+
+function showToast(message) {
+  var toast = document.getElementById("toast");
+  toast.innerHTML = message;
+  toast.className = "show";
+  setTimeout(() => {
+    toast.className = toast.className.replace("show", "");
+  }, 3000);
 }
 
 // COOKIES
@@ -396,43 +426,5 @@ function saveTodaysGuesses(guesses) {
       setCookie(`todays-guess-${i + 1}`, guesses[i], tomorrow);
     }
     console.log(document.cookie);
-  }
-}
-
-function displayTodaysGuesses() {
-  gameState = "over";
-  var todaysGuesses = [];
-  for (i = 0; i < 6; i += 1) {
-    var guess = getCookie(`todays-guess-${i + 1}`);
-    if (guess.length > 0) {
-      todaysGuesses.push(guess);
-      for (j = 0; j < 5; j += 1) {
-        displayLetter(guess[j]);
-      }
-      displayResults(todaysGuesses[i]);
-    }
-  }
-}
-
-function getTodaysDate() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = today.getFullYear();
-  today = `${dd}/${mm}/${yyyy}`;
-  return today;
-}
-
-function generateResultToShare() {
-  resultToShare = `W∞rdle ${getTodaysDate()} ${roundResultColours.length}/6 \n`;
-  for (i = 0; i < roundResultColours.length; i += 1) {
-    var rowColours = roundResultColours[i];
-    for (j = 0; j < rowColours.length; j += 1) {
-      resultToShare += colourSymbols[rowColours[j]];
-    }
-    if (i == roundResultColours.length) {
-      return;
-    }
-    resultToShare += "\n";
   }
 }

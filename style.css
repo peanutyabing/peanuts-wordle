@@ -202,7 +202,7 @@ body {
 
 #keyboard-container {
   text-align: center;
-  margin-top: 20px;
+  margin: 20px 0 20px 0;
 }
 
 .keyboard-row {
@@ -342,4 +342,75 @@ body {
 #share-button:hover {
   background-color: #db4c77;
   color: white;
+}
+
+/* The toast - position it at the bottom and in the middle of the screen */
+#toast {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  /*margin-left: -125px;  Divide value of min-width by 2 */
+  background-color: #ccc; /* Black background color */
+  text-align: center; /* Centered text */
+  border-radius: 4px; /* Rounded borders */
+  padding: 6px; /* Padding */
+  position: sticky;
+  z-index: 2; /* Add a z-index if needed */
+  left: 50%; /* Center the toast */
+  bottom: 30px; /* 30px from the bottom */
+  font-family: "Roboto", sans-serif;
+  font-size: larger;
+}
+
+/* Show the toast when clicking on a button (class added with JavaScript) */
+#toast.show {
+  visibility: visible; /* Show the toast */
+  /* Add animation: Take 0.5 seconds to fade in and out the toast.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the toast in and out */
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }

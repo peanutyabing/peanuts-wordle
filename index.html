@@ -161,6 +161,7 @@
           <div id="key" data-key="delete">⌫</div>
         </div>
       </div>
+      <div id="toast"></div>
     </div>
 
     <div id="score-board" class="modal">
@@ -337,13 +338,10 @@
 
       // When user clicks the share button, copy results to clipboard
       var shareButton = document.querySelector("#share-button");
-      shareButton.addEventListener("click", async function copyOperation() {
-        await navigator.clipboard.writeText(resultToShare);
-        console.log("Copy Success!");
+      shareButton.addEventListener("click", () => {
+        navigator.clipboard.writeText(resultToShare);
+        showToast("Result copied to clipboard.");
       });
-      setTimeout(() => {
-        copyOperation();
-      }, 3000);
     </script>
   </body>
 </html>
