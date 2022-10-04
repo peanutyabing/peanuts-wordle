@@ -6,11 +6,18 @@ let unlimitedMode = false;
 var randomAnswer = getRandomWord();
 var todaysFixedAnswer = getTodaysWord();
 var correctAnswer = "";
+var resultToShare = "";
 const guessedWords = [];
+const roundResultColours = [];
 const colourPalette = {
   green: "#96ceb4",
   yellow: "#ffeead",
   grey: "#888888",
+};
+const colourSymbols = {
+  green: "🟩",
+  yellow: "🟨",
+  grey: "⬛",
 };
 var keyColourMap = generatekeyColourMap();
 var cellCounter = 0; // Keeps track of where the next letter goes in the grid
@@ -22,6 +29,7 @@ function displayResults(guess) {
   if (validate(guess)) {
     var resultColours = getResultColours(guess, correctAnswer);
     cellCounter += 1; // Go to firs cell in next row
+    roundResultColours.push(resultColours);
     guessedWords.push(guess);
 
     // Render coloured cells
@@ -66,6 +74,7 @@ function tallyResults(guess) {
       setCookie(resultCookies[i], cookieValue, getExpiryDate(365));
     }
     gameState = "over";
+    generateResultToShare();
     setTimeout(() => {
       alert(
         `Congrats! "${guess}" is the correct word. Number of attempts: ${guessedWords.length}.`
@@ -85,6 +94,7 @@ function tallyResults(guess) {
     }
     setCookie("Played", cookieValue, getExpiryDate(365));
     gameState = "over";
+    generateResultToShare();
     setTimeout(() => {
       alert(`You ran out of tries! The answer is "${correctAnswer}".`);
     }, 1000);
@@ -401,5 +411,28 @@ function displayTodaysGuesses() {
       }
       displayResults(todaysGuesses[i]);
     }
+  }
+}
+
+function getTodaysDate() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, "0");
+  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  var yyyy = today.getFullYear();
+  today = `${dd}/${mm}/${yyyy}`;
+  return today;
+}
+
+function generateResultToShare() {
+  resultToShare = `W∞rdle ${getTodaysDate()} ${roundResultColours.length}/6 \n`;
+  for (i = 0; i < roundResultColours.length; i += 1) {
+    var rowColours = roundResultColours[i];
+    for (j = 0; j < rowColours.length; j += 1) {
+      resultToShare += colourSymbols[rowColours[j]];
+    }
+    if (i == roundResultColours.length) {
+      return;
+    }
+    resultToShare += "\n";
   }
 }

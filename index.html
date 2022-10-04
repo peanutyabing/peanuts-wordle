@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Peanut's W∞rdle</title>
+    <title>W∞rdle</title>
 
     <!-- Mobile friendly -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Font -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,7 +17,7 @@
     <!-- Page setup configurations -->
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="aurhor" contnet="Yabing" />
+    <meta name="author" content="Yabing" />
 
     <!-- Style sheets -->
     <link rel="stylesheet" href="style.css" />
@@ -67,10 +67,7 @@
       </div>
     </div>
     <div class="container">
-      <div id="header">
-        <div><h1 id="title">W∞rdle</h1></div>
-        <div><p id="author">by Peanut</p></div>
-      </div>
+      <div><h1 id="header">W∞rdle</h1></div>
       <div class="game-buttons">
         <div>
           <label class="checkbox"
@@ -196,6 +193,10 @@
           <div>6</div>
           <div class="tries" id="6-tries"></div>
         </div>
+        <div class="game-buttons">
+          <div id="feedback-button">💬 Feedback</div>
+          <div id="share-button">📢 Share</div>
+        </div>
       </div>
     </div>
 
@@ -279,6 +280,7 @@
           gameState = "playing";
           removeFlipCellsAnimation();
           guessedWords.splice(0, guessedWords.length);
+          roundResultColours.splice(0, roundResultColours.length);
           cellCounter = 0;
           randomAnswer = getRandomWord();
         }
@@ -294,12 +296,11 @@
           modalRules.style.display = "block";
         };
       }
-
+      // When the user clicks the rules button, open the modal
       var showRulesButton = document.querySelector("#show-rules");
       showRulesButton.addEventListener("click", () => {
         modalRules.style.display = "block";
       });
-
       // When the user clicks on <span> (x), close the modal
       rulesSpan.onclick = function () {
         modalRules.style.display = "none";
@@ -315,7 +316,7 @@
         modalScores.style.display = "none";
       };
 
-      // When the user clicks anywhere outside of the modals, modals close
+      // When the user clicks anywhere outside of a modal, close the modal
       window.onclick = function (event) {
         if (event.target == modalRules) {
           modalRules.style.display = "none";
@@ -324,6 +325,25 @@
           modalScores.style.display = "none";
         }
       };
+
+      // When user clicks the feedback button, go to GH discussions page
+      var feedbackButton = document.querySelector("#feedback-button");
+      feedbackButton.addEventListener("click", () => {
+        window.open(
+          "https://github.com/peanutyabing/peanuts-wordle/discussions",
+          "_blank"
+        );
+      });
+
+      // When user clicks the share button, copy results to clipboard
+      var shareButton = document.querySelector("#share-button");
+      shareButton.addEventListener("click", async function copyOperation() {
+        await navigator.clipboard.writeText(resultToShare);
+        console.log("Copy Success!");
+      });
+      setTimeout(() => {
+        copyOperation();
+      }, 3000);
     </script>
   </body>
 </html>

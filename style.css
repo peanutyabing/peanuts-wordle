@@ -5,25 +5,12 @@
 }
 
 #header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#title {
+  text-align: center;
   font-family: "Gemunu Libre", sans-serif;
   font-weight: bolder;
   font-size: 40pt;
   margin-top: 18px;
   margin-bottom: 6px;
-}
-
-#author {
-  font-family: "Satisfy", cursive;
-  font-weight: lighter;
-  font-size: 12pt;
-  margin-bottom: 6px;
-  padding-left: 6px;
 }
 
 body {
@@ -74,7 +61,7 @@ body {
   height: 20px;
   width: 20px;
   background-color: #ccc;
-  border-radius: 15%;
+  border-radius: 5px;
 }
 
 /* On mouse-over, add a grey background color */
@@ -122,7 +109,7 @@ body {
   display: inline-block;
   transition-duration: 0.4s;
   cursor: pointer;
-  border-radius: 5%;
+  border-radius: 5px;
 }
 
 #feeling-lazy:hover {
@@ -140,7 +127,7 @@ body {
   display: inline-block;
   transition-duration: 0.4s;
   cursor: pointer;
-  border-radius: 5%;
+  border-radius: 5px;
 }
 
 #show-rules:hover {
@@ -157,7 +144,7 @@ body {
   display: inline-block;
   transition-duration: 0.4s;
   cursor: pointer;
-  border-radius: 5%;
+  border-radius: 5px;
 }
 
 #play-again:hover {
@@ -231,7 +218,7 @@ body {
   border-width: 0.5px;
   border-style: solid;
   border-color: grey;
-  border-radius: 8%;
+  border-radius: 5px;
   font-size: 14pt;
   text-align: center;
   padding-top: 5px;
@@ -315,4 +302,44 @@ body {
 .break {
   flex-basis: 100%;
   height: 3px;
+}
+
+#feedback-button {
+  background-color: #ccc;
+  width: 120px;
+  margin: 20px 0 10px 0;
+  padding: 6px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 12pt;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+#feedback-button:hover {
+  background-color: #10559a;
+  color: white;
+}
+
+#share-button {
+  background-color: #ccc;
+  width: 120px;
+  margin: 20px 0 10px 0;
+  padding: 6px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 12pt;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+#share-button:hover {
+  background-color: #db4c77;
+  color: white;
 }
