@@ -1,5 +1,3 @@
-const cookieNames = ["Played", "Won", "1", "2", "3", "4", "5", "6"];
-
 // STARTING STATE
 let gameState = "playing";
 let unlimitedMode = false;
@@ -32,8 +30,11 @@ function displayResults(guess) {
     roundResultColours.push(resultColours);
     guessedWords.push(guess);
 
-    // Render coloured cells
+    // Save this guess
     var currentRowNumber = guessedWords.length;
+    saveGuess(guess, currentRowNumber);
+
+    // Render coloured cells
     var currentRowId = "#row-" + currentRowNumber.toString();
     var currentRowCells = document.querySelectorAll(`${currentRowId} .cell`);
     var interval = 100;
@@ -72,12 +73,12 @@ function tallyResults(guess) {
       setCookie(resultCookies[i], cookieValue, getExpiryDate(365));
     }
     gameState = "over";
+    saveGameState(gameState);
     generateResultToShare();
     setTimeout(() => {
       updateScores();
     }, 1000);
     highlightLastTry();
-    saveTodaysGuesses(guessedWords);
   } else if (guessedWords.length >= 6) {
     var cookieValue = getCookie("Played");
     if (cookieValue.length == 0) {
@@ -87,12 +88,12 @@ function tallyResults(guess) {
     }
     setCookie("Played", cookieValue, getExpiryDate(365));
     gameState = "over";
+    saveGameState(gameState);
     generateResultToShare();
     showToast(`You ran out of tries! The answer is "${correctAnswer}".`);
     setTimeout(() => {
       updateScores();
     }, 2000);
-    saveTodaysGuesses(guessedWords);
   }
 }
 
@@ -110,7 +111,7 @@ function validate(guess) {
   }
 }
 
-// Generate today's word
+// Generate today's answer word
 function getTodaysWord() {
   let startDate = new Date("09/10/2022");
   let today = new Date();
@@ -120,7 +121,7 @@ function getTodaysWord() {
   return todaysWord;
 }
 
-// Generate a random word for unlimted mode
+// Generate a random answer word for unlimted mode
 function getRandomWord() {
   var randomIndex = Math.floor(Math.random() * words.length);
   var randomWord = words[randomIndex];
@@ -167,7 +168,7 @@ function removeLastLetter() {
   }
 }
 
-// Generate an array for the colour at each position
+// Generate an array of colours to display for the result
 function getResultColours(guess, correctAnswer) {
   var answerArray = getLettersArray(correctAnswer);
 
@@ -337,7 +338,10 @@ function removeFlipCellsAnimation() {
 }
 
 function displayTodaysGuesses() {
-  gameState = "over";
+  var lastSavedState = getCookie("game-state");
+  if (lastSavedState == "over") {
+    gameState = "over";
+  }
   var todaysGuesses = [];
   for (i = 0; i < 6; i += 1) {
     var guess = getCookie(`todays-guess-${i + 1}`);
@@ -414,17 +418,26 @@ function getCookie(cName) {
   return "";
 }
 
-function saveTodaysGuesses(guesses) {
+function saveGuess(guess, rowNumber) {
   if (!unlimitedMode) {
     // Today's guesses expire at 0000hrs the next day
     var tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
     tomorrow.toUTCString();
-    // guesses = the array of all words guessed today
-    for (i = 0; i < guesses.length; i += 1) {
-      setCookie(`todays-guess-${i + 1}`, guesses[i], tomorrow);
-    }
-    console.log(document.cookie);
+
+    setCookie(`todays-guess-${rowNumber}`, guess, tomorrow);
+  }
+}
+
+function saveGameState(gameState) {
+  if (!unlimitedMode) {
+    // Today's game state expires together with saves guesses at 0000hrs the next day
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.toUTCString();
+
+    setCookie("game-state", gameState, tomorrow);
   }
 }
