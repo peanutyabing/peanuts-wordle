@@ -10,7 +10,7 @@ This was the final project for the Coding Basics course, which was taught in Jav
 
 **_How much time I spent_**
 
-The very basic working version with the full UI took about ~8-10 hours. I presented that version at my Coding Basics graduation. After that, I spent another ~10-15 hours or so to refine the game logic, fix bugs, and add a few good-to-have features, like the toasts/snackbars, cookies to store guesses for the Wordle of the day, display of past game stats, and sharing of results.
+The very basic working version with the full UI took about ~8-10 hours. I presented that version at my Coding Basics graduation. After that, I spent another ~25-30 hours or so to refine the game logic, fix bugs, and add a few good-to-have features, like the toasts/snackbars, cookies to store guesses for the Wordle of the day, display of past game stats, and sharing of results.
 
 Lots of the time was spent looking up how to do what I wanted to do, as 90% of the time it was outside of the scope of Coding Basics. It could have gone faster if I were to start from scratch now, having learnt from this project. ;)
 
